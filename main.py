@@ -35,7 +35,7 @@ class MainWindow(Gtk.Window):
         self.title_label = Gtk.Label()
         self.title_label.set_markup("<big>Openbox Application Installer</big>\n"
                                     "Select the apps you want to install\n"
-                                    "Click 'Install Applications' when ready.")
+                                    "Click 'Install' when ready.")
         self.title_box.pack_start(self.title_image, expand=False, fill=False, padding=0)
         self.title_box.pack_start(self.title_label, expand=True, fill=True, padding=0)
 
@@ -112,7 +112,7 @@ class MainWindow(Gtk.Window):
             button.connect("clicked", self.on_selection_button_clicked)
             self.button_box.pack_start(button, expand=False, fill=False, padding=0)
 
-        self.install_button = Gtk.Button(label="Install Applications")
+        self.install_button = Gtk.Button(label="Install")
         self.install_button.connect("clicked", self.run_installer)
 
         self.button_box.pack_end(self.install_button, expand=False, fill=False, padding=0)
