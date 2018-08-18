@@ -78,22 +78,22 @@ class MainWindow(Gtk.Window):
         # create a treeview, using the filter, adding columns
         self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
 
-        # model: icon
+        # column model: icon
         renderer = Gtk.CellRendererPixbuf()
         column = Gtk.TreeViewColumn("", renderer, icon_name=5)
         self.tree_view.append_column(column)
 
-        # model: name column
+        # column model: name column
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Application", renderer, text=0)
         self.tree_view.append_column(column)
 
-        # model: description column
+        # column model: description column
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Description", renderer, text=1)
         self.tree_view.append_column(column)
 
-        # model: install column
+        # column model: install column
         renderer = Gtk.CellRendererToggle()
         renderer.connect("toggled", self.on_toggle)
         column = Gtk.TreeViewColumn("Installed", renderer, active=2)
