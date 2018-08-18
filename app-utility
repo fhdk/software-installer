@@ -40,7 +40,7 @@ class MainWindow(Gtk.Window):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
         # set data
         self.install_pkg = []
-        self.remove_pkg = []
+        self.uninstall_pkg = []
         self.groups = []
         self.apps = self.get_app_data("./config/apps.json")
 
@@ -56,8 +56,8 @@ class MainWindow(Gtk.Window):
         self.title_image.set_from_file('./openbox.png')
         self.title_label = Gtk.Label()
         self.title_label.set_markup("<big>Openbox Application Installer</big>\n"
-                                    "Select the apps you want to install\n"
-                                    "Click 'Install' when ready.")
+                                    "Select/Deselect apps you want to install/remove.\n"
+                                    "Click 'FINISH' when ready.")
         self.title_box.pack_start(self.title_image, expand=False, fill=False, padding=0)
         self.title_box.pack_start(self.title_label, expand=True, fill=True, padding=0)
 
@@ -136,7 +136,7 @@ class MainWindow(Gtk.Window):
             button.connect("clicked", self.on_filter_button_clicked)
             self.button_box.pack_start(button, expand=False, fill=False, padding=0)
 
-        self.install_pkg_button = Gtk.Button(label="Install")
+        self.install_pkg_button = Gtk.Button(label="FINISH")
         self.install_pkg_button.connect("clicked", self.run_installer)
 
         self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=0)
@@ -168,15 +168,15 @@ class MainWindow(Gtk.Window):
             print("append: {}".format(pkg))
             self.install_pkg.append(pkg)
         else:
-            if pkg in self.ins_pkg:
+            if pkg in self.install_pkg:
                 print("remove: {}".format(pkg))
                 self.install_pkg.remove(pkg)
             else:
                 print("uninstall: {}".format(pkg))
-                self.uninstall_pkg_pkg.append(pkg)
+                self.uninstall_pkg.append(pkg)
 
     def run_installer(self, widget):
-        self.app_installation(self.install_pkg)
+        self.run_selection(self.install_pkg, self.uninstall_pkg)
 
     @staticmethod
     def app_installed(app):
@@ -202,9 +202,7 @@ class MainWindow(Gtk.Window):
         return result
 
     @staticmethod
-    def app_installation(install_pkg, remove_pkg):
-        if not install_pkg:
-            return
+    def run_selection(install_pkg, remove_pkg):
         install_file = "{}/install-packages.txt".format(os.environ["HOME"])
         remove_file = "{}/remove-packages.txt".format(os.environ["HOME"])
 
@@ -216,7 +214,7 @@ class MainWindow(Gtk.Window):
             for p in remove_pkg:
                 outfile.write("{} ".format(p))
 
-        os.system('gksu-polkit app-install')
+        os.system('gksu-polkit ./app-install')
 
 
 win = MainWindow()
