@@ -75,6 +75,12 @@
         "pkg": "hexchat"
       },
       {
+        "name": "Pidgin",
+        "icon": "pdgin",
+        "description": "Multi protocol IRC Client",
+        "pkg": "pidgin"
+      },
+      {
         "name": "Filezilla",
         "icon": "filezilla",
         "description": "Graphical FTP/SFTP browser",
