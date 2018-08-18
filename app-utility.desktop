@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=0.1
+Type=Application
+Name=Application Utility
+Comment=Openbox Application Utility
+Categories=Utility;
+Exec=app-utility
+Icon=system-software-install

@@ -16,9 +16,10 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
         # set data
-        self.packages = []
+        self.install_pkg = []
+        self.remove_pkg = []
         self.groups = []
-        self.apps = self.get_app_data("./apps.json")
+        self.apps = self.get_app_data("./config/apps.json")
 
         # setup main box
         self.set_default_size(600, 600)
@@ -47,32 +48,34 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_list_model = Gtk.ListStore(str, str, bool, str, str, str)
+        self.app_list = Gtk.ListStore(str, str, str, bool, str, str, bool)
         for group in self.apps:
             self.groups.append(group["gid"])
-            for app in group["apps"]:
-                list_item = (app["name"],
-                             app["description"],
+            for item in group["apps"]:
+                list_item = (item["icon"],
+                             item["name"],
+                             item["description"],
                              False,
                              group["gid"],
-                             app["pkg"],
-                             app["icon"])
+                             item["pkg"],
+                             False)
                 # get install status
-                status = self.app_installed(app["pkg"])
+                status = self.app_installed(item["pkg"])
                 if status:
-                    list_item = (app["name"],
-                                 app["description"],
+                    list_item = (item["icon"],
+                                 item["name"],
+                                 item["description"],
                                  True,
                                  group["gid"],
-                                 app["pkg"],
-                                 app["icon"])
-                self.app_list_model.append(list_item)
+                                 item["pkg"],
+                                 True)
+                self.app_list.append(list_item)
 
         # initial filter on first group
         self.current_filter_group = self.groups[0]
 
         # create a filter, feed it with the list store model
-        self.group_filter = self.app_list_model.filter_new()
+        self.group_filter = self.app_list.filter_new()
         self.group_filter.set_visible_func(self.group_filter_func)
 
         # create a treeview, using the filter, adding columns
@@ -80,23 +83,23 @@ class MainWindow(Gtk.Window):
 
         # column model: icon
         renderer = Gtk.CellRendererPixbuf()
-        column = Gtk.TreeViewColumn("", renderer, icon_name=5)
+        column = Gtk.TreeViewColumn("", renderer, icon_name=0)
         self.tree_view.append_column(column)
 
         # column model: name column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Application", renderer, text=0)
+        column = Gtk.TreeViewColumn("Application", renderer, text=1)
         self.tree_view.append_column(column)
 
         # column model: description column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Description", renderer, text=1)
+        column = Gtk.TreeViewColumn("Description", renderer, text=2)
         self.tree_view.append_column(column)
 
         # column model: install column
         renderer = Gtk.CellRendererToggle()
         renderer.connect("toggled", self.on_toggle)
-        column = Gtk.TreeViewColumn("Installed", renderer, active=2)
+        column = Gtk.TreeViewColumn("Installed", renderer, active=3)
         self.tree_view.append_column(column)
 
         # --------------------------------------  start button box ---------------------------------
@@ -110,10 +113,10 @@ class MainWindow(Gtk.Window):
             button.connect("clicked", self.on_filter_button_clicked)
             self.button_box.pack_start(button, expand=False, fill=False, padding=0)
 
-        self.install_button = Gtk.Button(label="Install")
-        self.install_button.connect("clicked", self.run_installer)
+        self.install_pkg_button = Gtk.Button(label="Install")
+        self.install_pkg_button.connect("clicked", self.run_installer)
 
-        self.button_box.pack_end(self.install_button, expand=False, fill=False, padding=0)
+        self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=0)
         # --------------------------------------  end  button box ---------------------------------
 
         # create a scrollable window
@@ -129,24 +132,28 @@ class MainWindow(Gtk.Window):
         if self.current_filter_group is None or self.current_filter_group == "None":
             return True
         else:
-            return model[iter][3] == self.current_filter_group
+            return model[iter][4] == self.current_filter_group
 
     def on_filter_button_clicked(self, widget):
         self.current_filter_group = widget.get_label()
         self.group_filter.refilter()
 
     def on_toggle(self, widget, path):
-        if self.app_list_model[path][2] == "Yes":
-            return
-        self.app_list_model[path][2] = not self.app_list_model[path][2]
-        pkg = self.app_list_model[path][5]
-        if self.app_list_model[path][2]:
-            self.packages.append(pkg)
+        self.app_list[path][3] = not self.app_list[path][3]
+        pkg = self.app_list[path][5]
+        if self.app_list[path][3]:
+            print("append: {}".format(pkg))
+            self.install_pkg.append(pkg)
         else:
-            self.packages.remove(pkg)
+            if pkg in self.ins_pkg:
+                print("remove: {}".format(pkg))
+                self.install_pkg.remove(pkg)
+            else:
+                print("uninstall: {}".format(pkg))
+                self.uninstall_pkg_pkg.append(pkg)
 
     def run_installer(self, widget):
-        self.app_installation(self.packages)
+        self.app_installation(self.install_pkg)
 
     @staticmethod
     def app_installed(app):
@@ -172,14 +179,21 @@ class MainWindow(Gtk.Window):
         return result
 
     @staticmethod
-    def app_installation(package_list):
-        if not package_list:
+    def app_installation(install_pkg, remove_pkg):
+        if not install_pkg:
             return
-        file = "{}/.packages.txt".format(os.environ["HOME"])
+        install_file = "{}/install-packages.txt".format(os.environ["HOME"])
+        remove_file = "{}/remove-packages.txt".format(os.environ["HOME"])
 
-        with open(file, "w") as outfile:
-            for p in package_list:
+        with open(install_file, "w") as outfile:
+            for p in install_pkg:
                 outfile.write("{} ".format(p))
+
+        with open(remove_file, "w") as outfile:
+            for p in remove_pkg:
+                outfile.write("{} ".format(p))
+
+        os.system('gksu-polkit app-install')
 
 
 win = MainWindow()
