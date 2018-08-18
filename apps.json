@@ -39,10 +39,10 @@
         "pkg": "opera"
       },
       {
-        "name": "Geary",
-        "icon": "geary",
-        "description": "GTK based Open Source Email Client",
-        "pkg": "geary"
+        "name": "Claws",
+        "icon": "claws-mail",
+        "description": "Open Source Mozilla PIM application",
+        "pkg": "claws-mail"
       },
       {
         "name": "Evolution",
@@ -51,22 +51,28 @@
         "pkg": "evolution"
       },
       {
+        "name": "Geary",
+        "icon": "geary",
+        "description": "GTK based Open Source Email Client",
+        "pkg": "geary"
+      },
+      {
         "name": "Sylpheed",
         "icon": "sylpheed",
         "description": "Open Source E-mail application",
-        "pkg": "thunderbird"
-      },
-      {
-        "name": "Claws",
-        "icon": "claws-mail",
-        "description": "Open Source Mozilla PIM application",
-        "pkg": "thunderbird"
+        "pkg": "sylpheed"
       },
       {
         "name": "Thunderbird",
         "icon": "thunderbird",
         "description": "Open Source Mozilla PIM application",
         "pkg": "thunderbird"
+      },
+      {
+        "name": "HexChat",
+        "icon": "hexchat",
+        "description": "IRC Client",
+        "pkg": "hexchat"
       },
       {
         "name": "Filezilla",
@@ -81,10 +87,10 @@
         "pkg": "qbittorrent"
       },
       {
-        "name": "HexChat",
-        "icon": "hexchat",
-        "description": "IRC Client",
-        "pkg": "hexchat"
+        "name": "Transmission",
+        "icon": "transmission",
+        "description": "Popular Bittorrent Client",
+        "pkg": "transmission"
       }
     ]
   },
