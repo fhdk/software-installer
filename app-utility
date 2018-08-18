@@ -33,6 +33,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
 TITLE = "Openbox Application Installer"
+DEBUG = True
 
 
 class MainWindow(Gtk.Window):
@@ -157,22 +158,26 @@ class MainWindow(Gtk.Window):
         self.app_store[path][3] = not state
         if self.app_store[path][3] is False:
             if pkg in self.install_pkg:
-                print("cancel install: {}".format(pkg))
+                if DEBUG:
+                    print("cancel install: {}".format(pkg))
                 self.install_pkg.remove(pkg)
             else:
-                print("uninstall: {}".format(pkg))
+                if DEBUG:
+                    print("uninstall: {}".format(pkg))
                 self.uninstall_pkg.append(pkg)
         else:
             if not installed:
-                print("install: {}".format(pkg))
+                if DEBUG:
+                    print("install: {}".format(pkg))
                 self.install_pkg.append(pkg)
             else:
                 if pkg in self.uninstall_pkg:
-                    print("cancel uninstall: {}".format(pkg))
+                    if DEBUG:
+                        print("cancel uninstall: {}".format(pkg))
                     self.uninstall_pkg.remove(pkg)
-
-        print("install pkg list: {}".format(self.install_pkg))
-        print("uninstall pkg list: {}".format(self.uninstall_pkg))
+        if DEBUG:
+            print("install pkg list: {}".format(self.install_pkg))
+            print("uninstall pkg list: {}".format(self.uninstall_pkg))
 
     def run_installer(self, widget):
         self.run_selection(self.install_pkg, self.uninstall_pkg)
@@ -202,10 +207,11 @@ class MainWindow(Gtk.Window):
 
     @staticmethod
     def run_selection(install_pkg, remove_pkg):
-        install_file = "/tmp/.install-packages.txt".format(os.environ['HOME'])
-        remove_file = "/tmp/.remove-packages.txt".format(os.environ['HOME'])
-        print(install_file)
-        print(remove_file)
+        install_file = "/tmp/.install-packages.txt"
+        remove_file = "/tmp/.remove-packages.txt"
+        if DEBUG:
+            print(install_file)
+            print(remove_file)
         with open(install_file, "w") as outfile:
             for p in install_pkg:
                 outfile.write("{} ".format(p))
@@ -214,7 +220,7 @@ class MainWindow(Gtk.Window):
             for p in remove_pkg:
                 outfile.write("{} ".format(p))
 
-        os.system('gksu-polkit app-install')
+        os.system('gksu-polkit ./app-install')
 
 
 win = MainWindow()
