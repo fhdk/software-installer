@@ -29,6 +29,9 @@ RM_PKG_FILE="${HOME}/.remove-packages.txt"
 PM_STATUS_FILE="${HOME}/.pm-status.txt"
 PM_LOCK_FILE="/var/lib/pacman/db.lck"
 
+echo ${IN_PKG_FILE}
+echo ${RM_PKG_FILE}
+
 # messages
 TITLE="Openbox Application Utility"
 UPD_DB_MSG="Updating Package Database..."
@@ -49,6 +52,12 @@ RM_PKG=` cat ${RM_PKG_FILE} `
 echo ${IN_PKG}
 echo ${RM_PKG}
 
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]]; then
+   echo "Superuser required ..." 1>&2
+   exit 1
+fi
+
 # updating databases and writing results to a file
 pacman -Syy | tee ${PM_STATUS_FILE} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${UPD_DB_MSG}" --width=500 --auto-close
 
@@ -58,7 +67,7 @@ PM_STATUS=` cat ${PM_STATUS_FILE} `
 # checking for other running package managers
 if [[ $(cat ${PM_STATUS_FILE} | grep -i 'core.db') = "" ]]
 	then # giving choice to user to kill other process or wait
-	ans=$(zenity --list --title="${TITLE}" --radiolist --text "${DB_LOCKED_MSG}" --column Select --column Choice TRUE "${KILL_PROCESS}" FALSE "${WAIT_PROCESS}" --height=300)
+	ans=$(zenity --list --title="${TITLE}" --radiolist --text "${DB_LOCKED_MSG}" --column Select --column Choice TRUE "${KILL_PROCESS}" FALSE "${WAIT_PROCESS}" --width=500 --height=300)
 	# killing pamac and unlocking db
 	if [ "$ans" = "${KILL_PROCESS}" ]
 		then
@@ -73,16 +82,16 @@ fi
 
 # Installing packages
 if [[ -n ${IN_PKG} ]]; then
-    pacman -Syu --noconfirm ${IN_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${IN_WORKING_MSG}" --width=500 --auto-close
+    pacman -Syu --noconfirm ${IN_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${IN_WORKING_MSG}" --width=500 --height=300 --auto-close
 fi
 
 # Uninstalling packages
 if [[ -n ${RM_PKG} ]]; then
-    pacman -R --noconfirm ${RM_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${RM_WORKING_MSG}" --width=500 --auto-close
+    pacman -R --noconfirm ${RM_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${RM_WORKING_MSG}" --width=500 --height=300 --auto-close
 fi
 
 # Letting user know that packages have been installed
-zenity --info --text="${DONE}"
+zenity --info --text="${DONE}" --width=500 --height=300
 
 # removing files no longer needed
 if [[ -f ${IN_PKG_FILE} ]]; then

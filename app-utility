@@ -67,7 +67,7 @@ class MainWindow(Gtk.Window):
         self.title_label = Gtk.Label()
         self.title_label.set_markup("<big>Openbox Application Installer</big>\n"
                                     "Select/Deselect apps you want to install/remove.\n"
-                                    "Click 'INSTALL APPS' when ready.")
+                                    "Click 'UPDATE SYSTEM' when ready.")
         self.title_box.pack_start(self.title_image, expand=False, fill=False, padding=0)
         self.title_box.pack_start(self.title_label, expand=True, fill=True, padding=0)
 
@@ -154,7 +154,7 @@ class MainWindow(Gtk.Window):
         #     button.connect("clicked", self.on_filter_button_clicked)
         #     self.button_box.pack_start(button, expand=False, fill=False, padding=0)
 
-        self.install_pkg_button = Gtk.Button(label="INSTALL APPS")
+        self.install_pkg_button = Gtk.Button(label="UPDATE SYSTEM")
         self.install_pkg_button.connect("clicked", self.run_installer)
 
         self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=0)
@@ -233,9 +233,10 @@ class MainWindow(Gtk.Window):
 
     @staticmethod
     def run_selection(install_pkg, remove_pkg):
-        install_file = "{}/install-packages.txt".format(os.environ["HOME"])
-        remove_file = "{}/remove-packages.txt".format(os.environ["HOME"])
-
+        install_file = "{}/.install-packages.txt".format(os.environ['HOME'])
+        remove_file = "{}/.remove-packages.txt".format(os.environ['HOME'])
+        print(install_file)
+        print(remove_file)
         with open(install_file, "w") as outfile:
             for p in install_pkg:
                 outfile.write("{} ".format(p))
