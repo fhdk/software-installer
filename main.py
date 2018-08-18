@@ -17,9 +17,8 @@ class MainWindow(Gtk.Window):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
         # set data
         self.packages = []
-        self.app_groups = []
-        self.app_data = self.get_app_data("./apps.json")
-        self.app_keys = list(self.app_data[0]["apps"][0].keys())
+        self.groups = []
+        self.apps = self.get_app_data("./apps.json")
 
         # setup main box
         self.set_default_size(600, 600)
@@ -49,13 +48,13 @@ class MainWindow(Gtk.Window):
 
         # setup list store model
         self.app_list_model = Gtk.ListStore(str, str, bool, str, str, str)
-        for group_name in self.app_data:
-            self.app_groups.append(group_name["group"])
-            for app in group_name["apps"]:
+        for group in self.apps:
+            self.groups.append(group["gid"])
+            for app in group["apps"]:
                 list_item = (app["name"],
                              app["description"],
                              False,
-                             group_name["group"],
+                             group["gid"],
                              app["pkg"],
                              app["icon"])
                 # get install status
@@ -64,13 +63,13 @@ class MainWindow(Gtk.Window):
                     list_item = (app["name"],
                                  app["description"],
                                  True,
-                                 group_name["group"],
+                                 group["gid"],
                                  app["pkg"],
                                  app["icon"])
                 self.app_list_model.append(list_item)
 
         # initial filter on first group
-        self.current_filter_group = self.app_groups[0]
+        self.current_filter_group = self.groups[0]
 
         # create a filter, feed it with the list store model
         self.group_filter = self.app_list_model.filter_new()
@@ -105,8 +104,8 @@ class MainWindow(Gtk.Window):
         self.button_box = Gtk.Box(spacing=10)
         # create filter buttons
         self.filter_buttons = list()
-        for group_name in self.app_groups:
-            button = Gtk.Button(label=group_name)
+        for group in self.groups:
+            button = Gtk.Button(label=group)
             self.filter_buttons.append(button)
             button.connect("clicked", self.on_selection_button_clicked)
             self.button_box.pack_start(button, expand=False, fill=False, padding=0)

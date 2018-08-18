@@ -1,6 +1,6 @@
 [
   {
-    "group": "Internet",
+    "gid": "Internet",
     "apps": [
       {
         "name": "Chromium",
@@ -101,7 +101,7 @@
     ]
   },
   {
-    "group": "Photo and Image",
+    "gid": "Photo and Image",
     "apps": [
       {
         "name": "GIMP",
@@ -148,7 +148,7 @@
     ]
   },
   {
-    "group": "Media",
+    "gid": "Media",
     "apps": [
       {
         "name": "Parole",
@@ -225,7 +225,7 @@
     ]
   },
   {
-    "group": "Office",
+    "gid": "Office",
     "apps": [
       {
         "name": "Qpdfview",
