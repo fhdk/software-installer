@@ -1,0 +1,274 @@
+[
+  {
+    "group": "Internet",
+    "apps": [
+      {
+        "name": "Chromium",
+        "icon": "chromium",
+        "description": "Open Source version of Chrome Browser",
+        "pkg": "chromium"
+      },
+      {
+        "name": "Falkon",
+        "icon": "falkon",
+        "description": "Qt based Open Source Web Browser",
+        "pkg": "falkon"
+      },
+      {
+        "name": "Firefox",
+        "icon": "firefox",
+        "description": "Mozilla Web Browser",
+        "pkg": "firefox"
+      },
+      {
+        "name": "Midori",
+        "icon": "midori",
+        "description": "Open Source Web Browser",
+        "pkg": "midori"
+      },
+      {
+        "name": "Netsurf",
+        "icon": "netsurf",
+        "description": "Light and Fast Web Browser",
+        "pkg": "netsurf"
+      },
+      {
+        "name": "Opera",
+        "icon": "opera",
+        "description": "Open Source Web Browser",
+        "pkg": "opera"
+      },
+      {
+        "name": "Geary",
+        "icon": "geary",
+        "description": "GTK based Open Source Email Client",
+        "pkg": "geary"
+      },
+      {
+        "name": "Evolution",
+        "icon": "evolution",
+        "description": "Open Source Gnome PIM application",
+        "pkg": "evolution"
+      },
+      {
+        "name": "Thunderbird",
+        "icon": "thunderbird",
+        "description": "Open Source Mozilla PIM application",
+        "pkg": "thunderbird"
+      },
+      {
+        "name": "Filezilla",
+        "icon": "filezilla",
+        "description": "Graphical FTP/SFTP browser",
+        "pkg": "filezilla"
+      },
+      {
+        "name": "qBittorrent",
+        "icon": "qbittorrent",
+        "description": "A Qt based Bittorrent Client",
+        "pkg": "qbittorrent"
+      },
+      {
+        "name": "HexChat",
+        "icon": "hexchat",
+        "description": "IRC Client",
+        "pkg": "hexchat"
+      }
+    ]
+  },
+  {
+    "group": "Photo and Image",
+    "apps": [
+      {
+        "name": "GIMP",
+        "icon": "gimp",
+        "description": "GNU Image Manipulation Program",
+        "pkg": "gimp"
+      },
+      {
+        "name": "Pinta",
+        "icon": "pinta",
+        "description": "Easy create and edit images",
+        "pkg": "pinta"
+      },
+      {
+        "name": "Tux Paint",
+        "icon": "tuxpaint",
+        "description": "Drawing program for children",
+        "pkg": "tuxpaint"
+      },
+      {
+        "name": "Gpicview",
+        "icon": "gpicview",
+        "description": "Lightweight Image Viewer",
+        "pkg": "gpicview"
+      },
+      {
+        "name": "gThumb",
+        "icon": "gthumb",
+        "description": "Gnome Image View and Organize",
+        "pkg": "gthumb"
+      },
+      {
+        "name": "Viewnior",
+        "icon": "viewnior",
+        "description": "GTK based Elegant Image Viewer",
+        "pkg": "viewnior"
+      },
+      {
+        "name": "Shotwell",
+        "icon": "shotwell",
+        "description": "GTK based Photo Manager",
+        "pkg": "shotwell"
+      }
+    ]
+  },
+  {
+    "group": "Media",
+    "apps": [
+      {
+        "name": "Parole",
+        "icon": "parole",
+        "description": "Popular Open Source Media Player",
+        "pkg": "parole"
+      },
+      {
+        "name": "VLC",
+        "icon": "vlc",
+        "description": "Popular Open Source Media Player",
+        "pkg": "vlc"
+      },
+      {
+        "name": "Totem",
+        "icon": "totem",
+        "description": "Popular Open Source Media Player",
+        "pkg": "totem"
+      },
+      {
+        "name": "Audacious",
+        "icon": "audacious",
+        "description": "Popular GTK based Music Player",
+        "pkg": "audacious"
+      },
+      {
+        "name": "Clementine",
+        "icon": "clementine",
+        "description": "Popular GTK based Music Player",
+        "pkg": "clementine"
+      },
+      {
+        "name": "Ristretto",
+        "icon": "ristretto",
+        "description": "Music Player",
+        "pkg": "ristretto"
+      },
+      {
+        "name": "Audacity",
+        "icon": "audacity",
+        "description": "Record and Edit Audio files",
+        "pkg": "audacity"
+      },
+      {
+        "name": "DeadBeeF",
+        "icon": "deadbeef",
+        "description": "Music Player",
+        "pkg": "parole"
+      },
+      {
+        "name": "Simple Screen Recorder",
+        "icon": "simple-ccsm",
+        "description": "Screen Capturing Application",
+        "pkg": "simplescreenrecorder"
+      },
+      {
+        "name": "Kdenlive",
+        "icon": "kdenlive",
+        "description": "Video Editing Application",
+        "pkg": "kdenlive"
+      },
+      {
+        "name": "OBS Studio",
+        "icon": "obs",
+        "description": "Open Source Streaming/Recording Application",
+        "pkg": "obs-studio"
+      },
+      {
+        "name": "Kodi",
+        "icon": "kodi",
+        "description": "Kodi Media Suite",
+        "pkg": "kodi"
+      }
+    ]
+  },
+  {
+    "group": "Office",
+    "apps": [
+      {
+        "name": "Qpdfview",
+        "icon": "qpdfview",
+        "description": "Qt based PDF Viewer",
+        "pkg": "qpdfview"
+      },
+      {
+        "name": "Epdfview",
+        "icon": "qpdfview",
+        "description": "GTK based PDF Viewer",
+        "pkg": "epdfview"
+      },
+      {
+        "name": "Libre Office (Fresh)",
+        "icon": "libreoffice-main",
+        "description": "Open Source Office Application (Fresh)",
+        "pkg": "libreoffice-fresh"
+      },
+      {
+        "name": "Libre Office (Still)",
+        "icon": "libreoffice-main",
+        "description": "Open Source Office Application (Still)",
+        "pkg": "libreoffice-still"
+      },
+      {
+        "name": "Calligra Office",
+        "icon": "calligrawords",
+        "description": "Qt Based Office Suite",
+        "pkg": "calligra"
+      },
+      {
+        "name": "Abiword",
+        "icon": "abiword",
+        "description": "Word Document Application",
+        "pkg": "abiword"
+      },
+      {
+        "name": "Gnumeric",
+        "icon": "gnumeric",
+        "description": "Spreadsheet Application",
+        "pkg": "gnumeric"
+      },
+      {
+        "name": "PDFMod",
+        "icon": "pdfmod",
+        "description": "PDF Management Application",
+        "pkg": "pdfmod"
+      },
+      {
+        "name": "Evince",
+        "icon": "evince",
+        "description": "PDF Viewing Application",
+        "pkg": "evince"
+      },
+      {
+        "name": "Calibre",
+        "icon": "calibre-viewer",
+        "description": "Qt based E-Book Reader",
+        "pkg": "calibre"
+      },
+      {
+        "name": "FBReader",
+        "icon": "fbreader",
+        "description": "GTK based E-Book Reader",
+        "pkg": "fbreader"
+      }
+    ]
+  }
+]
