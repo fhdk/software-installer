@@ -24,9 +24,9 @@
 
 #set -x
 # files
-IN_PKG_FILE="${HOME}/.install-packages.txt"
-RM_PKG_FILE="${HOME}/.remove-packages.txt"
-PM_STATUS_FILE="${HOME}/.pm-status.txt"
+IN_PKG_FILE="/tmp/.install-packages.txt"
+RM_PKG_FILE="/tmp/.remove-packages.txt"
+PM_STATUS_FILE="/tmp/.pm-status.txt"
 PM_LOCK_FILE="/var/lib/pacman/db.lck"
 
 echo ${IN_PKG_FILE}
