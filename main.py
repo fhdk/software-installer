@@ -10,7 +10,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 TITLE = "Openbox Application Installer"
-ICON_PATH = "/usr/share/icons/Papirus/48x48/apps/"
 
 
 class MainWindow(Gtk.Window):
