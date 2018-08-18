@@ -30,7 +30,7 @@ import os
 import gi
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 TITLE = "Openbox Application Installer"
 
@@ -38,7 +38,17 @@ TITLE = "Openbox Application Installer"
 class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
+        GLib.set_prgname("app-utility")
+        icon="system-software-install"
+        pixbuf24 = Gtk.IconTheme.get_default().load_icon(icon, 24, 0)
+        pixbuf32 = Gtk.IconTheme.get_default().load_icon(icon, 32, 0)
+        pixbuf48 = Gtk.IconTheme.get_default().load_icon(icon, 48, 0)
+        pixbuf64 = Gtk.IconTheme.get_default().load_icon(icon, 64, 0)
+        pixbuf96 = Gtk.IconTheme.get_default().load_icon(icon, 96, 0)
+        self.set_icon_list([pixbuf24, pixbuf32, pixbuf48, pixbuf64, pixbuf96])
+
         # set data
+        self.selected_app = None
         self.install_pkg = []
         self.uninstall_pkg = []
         self.groups = []
@@ -71,7 +81,8 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_list = Gtk.ListStore(str, str, str, bool, str, str, bool)
+        self.app_store = Gtk.ListStore(str, str, str, bool, str, str)
+
         for group in self.apps:
             self.groups.append(group["gid"])
             for item in group["apps"]:
@@ -80,29 +91,32 @@ class MainWindow(Gtk.Window):
                              item["description"],
                              False,
                              group["gid"],
-                             item["pkg"],
-                             False)
+                             item["pkg"])
                 # get install status
                 status = self.app_installed(item["pkg"])
                 if status:
+                    # change status to installed
                     list_item = (item["icon"],
                                  item["name"],
                                  item["description"],
                                  True,
                                  group["gid"],
-                                 item["pkg"],
-                                 True)
-                self.app_list.append(list_item)
+                                 item["pkg"])
+                # add to the store
+                self.app_iter = self.app_store.append(list_item)
 
         # initial filter on first group
         self.current_filter_group = self.groups[0]
 
         # create a filter, feed it with the list store model
-        self.group_filter = self.app_list.filter_new()
+        self.group_filter = self.app_store.filter_new()
         self.group_filter.set_visible_func(self.group_filter_func)
 
         # create a treeview, using the filter, adding columns
         self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
+
+        selected_row = self.tree_view.get_selection()
+        selected_row.connect("changed", self.on_changed)
 
         # column model: icon
         renderer = Gtk.CellRendererPixbuf()
@@ -120,9 +134,9 @@ class MainWindow(Gtk.Window):
         self.tree_view.append_column(column)
 
         # column model: install column
-        renderer = Gtk.CellRendererToggle()
-        renderer.connect("toggled", self.on_toggle)
-        column = Gtk.TreeViewColumn("Installed", renderer, active=3)
+        toggle_cell = Gtk.CellRendererToggle()
+        toggle_cell.connect("toggled", self.on_toggle)
+        column = Gtk.TreeViewColumn("Installed", toggle_cell)
         self.tree_view.append_column(column)
 
         # --------------------------------------  start button box ---------------------------------
@@ -143,37 +157,52 @@ class MainWindow(Gtk.Window):
         # --------------------------------------  end  button box ---------------------------------
 
         # create a scrollable window
-        self.tree_list = Gtk.ScrolledWindow()
-        self.tree_list.set_vexpand(True)
-        self.tree_list.add(self.tree_view)
-        self.grid.attach(self.tree_list, 0, 0, 8, 10)
+        self.app_window = Gtk.ScrolledWindow()
+        self.app_window.set_vexpand(True)
+        self.app_window.add(self.tree_view)
+
+        self.grid.attach(self.app_window, 0, 0, 4, len(self.app_store))
         # pack button box
         self.main_box.pack_end(self.button_box, expand=False, fill=False, padding=10)
         self.show_all()
 
-    def group_filter_func(self, model, iter, data):
+    def group_filter_func(self, groups, row, data):
         if self.current_filter_group is None or self.current_filter_group == "None":
             return True
         else:
-            return model[iter][4] == self.current_filter_group
+            return groups[row][4] == self.current_filter_group
 
     def on_filter_button_clicked(self, widget):
         self.current_filter_group = widget.get_label()
         self.group_filter.refilter()
 
+    def on_changed(self, selection):
+        model, row = selection.get_selected()
+        if row is not None:
+            print(model[row][1])
+            self.selected_app = model[row][1]
+
     def on_toggle(self, widget, path):
-        self.app_list[path][3] = not self.app_list[path][3]
-        pkg = self.app_list[path][5]
-        if self.app_list[path][3]:
-            print("append: {}".format(pkg))
-            self.install_pkg.append(pkg)
-        else:
+        pkg = self.selected_app
+        state = None
+        for app in self.app_store:
+            if app[5] == pkg:
+                if app[3] is True:
+                    state = True
+                else:
+                    state = False
+                break
+        if state is False:
             if pkg in self.install_pkg:
-                print("remove: {}".format(pkg))
+                print("cancel: {}".format(pkg))
                 self.install_pkg.remove(pkg)
             else:
                 print("uninstall: {}".format(pkg))
                 self.uninstall_pkg.append(pkg)
+        else:
+            print("install: {}".format(pkg))
+            self.install_pkg.append(pkg)
+        path.active = state
 
     def run_installer(self, widget):
         self.run_selection(self.install_pkg, self.uninstall_pkg)
