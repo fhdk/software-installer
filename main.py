@@ -2,7 +2,7 @@
 
 import collections
 import json
-import subprocess
+import glob
 import os
 import gi
 
@@ -150,11 +150,9 @@ class MainWindow(Gtk.Window):
 
     @staticmethod
     def app_installed(app):
-        cmd = subprocess.run(["pacman", "-Q", f"{app}"],
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             encoding="utf8")
-        return app in cmd.stdout
+        if glob.glob("/var/lib/pacman/local/{}-[0-9]*".format(app)):
+            return True
+        return False
 
     @staticmethod
     def get_app_data(filename, dictionary=True):
