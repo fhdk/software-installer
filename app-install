@@ -82,12 +82,12 @@ fi
 
 # Installing packages
 if [[ -n ${IN_PKG} ]]; then
-    pacman -Syu --noconfirm ${IN_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${IN_WORKING_MSG}" --width=500 --height=300 --auto-close
+    pacman -Syu --noconfirm ${IN_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${IN_WORKING_MSG}" --width=500 --auto-close
 fi
 
 # Uninstalling packages
 if [[ -n ${RM_PKG} ]]; then
-    pacman -R --noconfirm ${RM_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${RM_WORKING_MSG}" --width=500 --height=300 --auto-close
+    pacman -R --noconfirm ${RM_PKG} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${RM_WORKING_MSG}" --width=500 --auto-close
 fi
 
 # Letting user know that packages have been installed
