@@ -67,7 +67,7 @@ class MainWindow(Gtk.Window):
         self.title_label = Gtk.Label()
         self.title_label.set_markup("<big>Openbox Application Installer</big>\n"
                                     "Select/Deselect apps you want to install/remove.\n"
-                                    "Click 'FINISH' when ready.")
+                                    "Click 'INSTALL APPS' when ready.")
         self.title_box.pack_start(self.title_image, expand=False, fill=False, padding=0)
         self.title_box.pack_start(self.title_label, expand=True, fill=True, padding=0)
 
@@ -110,15 +110,16 @@ class MainWindow(Gtk.Window):
                 self.app_index = self.app_store.append(list_item)
                 app_id += 1
 
-        # initial filter on first group
-        self.current_filter_group = self.groups[0]
-
-        # create a filter, feed it with the list store model
-        self.group_filter = self.app_store.filter_new()
-        self.group_filter.set_visible_func(self.group_filter_func)
-
+        # # initial filter on first group
+        # self.current_filter_group = None
+        #
+        # # create a filter, feed it with the list store model
+        # self.group_filter = self.app_store.filter_new()
+        # self.group_filter.set_visible_func(self.group_filter_func)
+        #
         # create a treeview, using the filter, adding columns
-        self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
+        # self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
+        self.tree_view = Gtk.TreeView(model=self.app_store)
         self.tree_view.set_activate_on_single_click(True)
 
         # column model: icon
@@ -145,15 +146,15 @@ class MainWindow(Gtk.Window):
         # --------------------------------------  start button box ---------------------------------
         # create box with execute buttons
         self.button_box = Gtk.Box(spacing=10)
-        # create filter buttons
-        self.filter_buttons = list()
-        for group in self.groups:
-            button = Gtk.Button(label=group)
-            self.filter_buttons.append(button)
-            button.connect("clicked", self.on_filter_button_clicked)
-            self.button_box.pack_start(button, expand=False, fill=False, padding=0)
+        # # create filter buttons
+        # self.filter_buttons = list()
+        # for group in self.groups:
+        #     button = Gtk.Button(label=group)
+        #     self.filter_buttons.append(button)
+        #     button.connect("clicked", self.on_filter_button_clicked)
+        #     self.button_box.pack_start(button, expand=False, fill=False, padding=0)
 
-        self.install_pkg_button = Gtk.Button(label="FINISH")
+        self.install_pkg_button = Gtk.Button(label="INSTALL APPS")
         self.install_pkg_button.connect("clicked", self.run_installer)
 
         self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=0)
@@ -169,15 +170,15 @@ class MainWindow(Gtk.Window):
         self.main_box.pack_end(self.button_box, expand=False, fill=False, padding=10)
         self.show_all()
 
-    def group_filter_func(self, groups, row, data):
-        if self.current_filter_group is None or self.current_filter_group == "None":
-            return True
-        else:
-            return groups[row][4] == self.current_filter_group
-
-    def on_filter_button_clicked(self, widget):
-        self.current_filter_group = widget.get_label()
-        self.group_filter.refilter()
+    # def group_filter_func(self, groups, row, data):
+    #     if self.current_filter_group is None or self.current_filter_group == "None":
+    #         return True
+    #     else:
+    #         return groups[row][4] == self.current_filter_group
+    #
+    # def on_filter_button_clicked(self, widget):
+    #     self.current_filter_group = widget.get_label()
+    #     self.group_filter.refilter()
 
     def on_toggle(self, cell, path):
         state = cell.get_active()
