@@ -187,7 +187,7 @@ class MainWindow(Gtk.Window):
         self.app_store[path][3] = not state
         if self.app_store[path][3] is False:
             if pkg in self.install_pkg:
-                print("cancel: {}".format(pkg))
+                print("cancel install: {}".format(pkg))
                 self.install_pkg.remove(pkg)
             else:
                 print("uninstall: {}".format(pkg))
@@ -198,10 +198,11 @@ class MainWindow(Gtk.Window):
                 self.install_pkg.append(pkg)
             else:
                 if pkg in self.uninstall_pkg:
+                    print("cancel uninstall: {}".format(pkg))
                     self.uninstall_pkg.remove(pkg)
 
-        print("install: {}".format(self.install_pkg))
-        print("uninstall: {}".format(self.uninstall_pkg))
+        print("install pkg list: {}".format(self.install_pkg))
+        print("uninstall pkg list: {}".format(self.uninstall_pkg))
 
     def run_installer(self, widget):
         self.run_selection(self.install_pkg, self.uninstall_pkg)
