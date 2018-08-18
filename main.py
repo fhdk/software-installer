@@ -107,7 +107,7 @@ class MainWindow(Gtk.Window):
         for group in self.groups:
             button = Gtk.Button(label=group)
             self.filter_buttons.append(button)
-            button.connect("clicked", self.on_selection_button_clicked)
+            button.connect("clicked", self.on_filter_button_clicked)
             self.button_box.pack_start(button, expand=False, fill=False, padding=0)
 
         self.install_button = Gtk.Button(label="Install")
@@ -131,7 +131,7 @@ class MainWindow(Gtk.Window):
         else:
             return model[iter][3] == self.current_filter_group
 
-    def on_selection_button_clicked(self, widget):
+    def on_filter_button_clicked(self, widget):
         self.current_filter_group = widget.get_label()
         self.group_filter.refilter()
 
