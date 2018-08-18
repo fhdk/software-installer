@@ -110,15 +110,6 @@ class MainWindow(Gtk.Window):
                 self.app_index = self.app_store.append(list_item)
                 app_id += 1
 
-        # # initial filter on first group
-        # self.current_filter_group = None
-        #
-        # # create a filter, feed it with the list store model
-        # self.group_filter = self.app_store.filter_new()
-        # self.group_filter.set_visible_func(self.group_filter_func)
-        #
-        # create a treeview, using the filter, adding columns
-        # self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
         self.tree_view = Gtk.TreeView(model=self.app_store)
         self.tree_view.set_activate_on_single_click(True)
 
@@ -143,22 +134,10 @@ class MainWindow(Gtk.Window):
         column = Gtk.TreeViewColumn("Installed", toggle, active=3)
         self.tree_view.append_column(column)
 
-        # --------------------------------------  start button box ---------------------------------
-        # create box with execute buttons
         self.button_box = Gtk.Box(spacing=10)
-        # # create filter buttons
-        # self.filter_buttons = list()
-        # for group in self.groups:
-        #     button = Gtk.Button(label=group)
-        #     self.filter_buttons.append(button)
-        #     button.connect("clicked", self.on_filter_button_clicked)
-        #     self.button_box.pack_start(button, expand=False, fill=False, padding=0)
-
         self.install_pkg_button = Gtk.Button(label="UPDATE SYSTEM")
         self.install_pkg_button.connect("clicked", self.run_installer)
-
         self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=0)
-        # --------------------------------------  end  button box ---------------------------------
 
         # create a scrollable window
         self.app_window = Gtk.ScrolledWindow()
@@ -169,16 +148,6 @@ class MainWindow(Gtk.Window):
         # pack button box
         self.main_box.pack_end(self.button_box, expand=False, fill=False, padding=10)
         self.show_all()
-
-    # def group_filter_func(self, groups, row, data):
-    #     if self.current_filter_group is None or self.current_filter_group == "None":
-    #         return True
-    #     else:
-    #         return groups[row][4] == self.current_filter_group
-    #
-    # def on_filter_button_clicked(self, widget):
-    #     self.current_filter_group = widget.get_label()
-    #     self.group_filter.refilter()
 
     def on_toggle(self, cell, path):
         state = cell.get_active()
@@ -233,8 +202,8 @@ class MainWindow(Gtk.Window):
 
     @staticmethod
     def run_selection(install_pkg, remove_pkg):
-        install_file = "{}/.install-packages.txt".format(os.environ['HOME'])
-        remove_file = "{}/.remove-packages.txt".format(os.environ['HOME'])
+        install_file = "/tmp/.install-packages.txt".format(os.environ['HOME'])
+        remove_file = "/tmp/.remove-packages.txt".format(os.environ['HOME'])
         print(install_file)
         print(remove_file)
         with open(install_file, "w") as outfile:
@@ -245,7 +214,7 @@ class MainWindow(Gtk.Window):
             for p in remove_pkg:
                 outfile.write("{} ".format(p))
 
-        os.system('gksu-polkit ./app-install')
+        os.system('gksu-polkit app-install')
 
 
 win = MainWindow()
