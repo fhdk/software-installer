@@ -220,6 +220,7 @@ class MainWindow(Gtk.Window):
             for p in remove_pkg:
                 outfile.write("{} ".format(p))
 
+        # remove ./ in release depending on structure
         os.system('gksu-polkit ./app-install')
 
 
