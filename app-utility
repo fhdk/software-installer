@@ -81,8 +81,8 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_store = Gtk.ListStore(str, str, str, bool, str, str)
-
+        self.app_store = Gtk.ListStore(str, str, str, bool, str, str, int, bool)
+        app_id = 0
         for group in self.apps:
             self.groups.append(group["gid"])
             for item in group["apps"]:
@@ -91,7 +91,9 @@ class MainWindow(Gtk.Window):
                              item["description"],
                              False,
                              group["gid"],
-                             item["pkg"])
+                             item["pkg"],
+                             app_id,
+                             False)
                 # get install status
                 status = self.app_installed(item["pkg"])
                 if status:
@@ -101,9 +103,12 @@ class MainWindow(Gtk.Window):
                                  item["description"],
                                  True,
                                  group["gid"],
-                                 item["pkg"])
+                                 item["pkg"],
+                                 app_id,
+                                 True)
                 # add to the store
-                self.app_iter = self.app_store.append(list_item)
+                self.app_index = self.app_store.append(list_item)
+                app_id += 1
 
         # initial filter on first group
         self.current_filter_group = self.groups[0]
@@ -114,9 +119,7 @@ class MainWindow(Gtk.Window):
 
         # create a treeview, using the filter, adding columns
         self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
-
-        selected_row = self.tree_view.get_selection()
-        selected_row.connect("changed", self.on_changed)
+        self.tree_view.set_activate_on_single_click(True)
 
         # column model: icon
         renderer = Gtk.CellRendererPixbuf()
@@ -134,9 +137,9 @@ class MainWindow(Gtk.Window):
         self.tree_view.append_column(column)
 
         # column model: install column
-        toggle_cell = Gtk.CellRendererToggle()
-        toggle_cell.connect("toggled", self.on_toggle)
-        column = Gtk.TreeViewColumn("Installed", toggle_cell)
+        toggle = Gtk.CellRendererToggle()
+        toggle.connect("toggled", self.on_toggle)
+        column = Gtk.TreeViewColumn("Installed", toggle, active=3)
         self.tree_view.append_column(column)
 
         # --------------------------------------  start button box ---------------------------------
@@ -176,23 +179,13 @@ class MainWindow(Gtk.Window):
         self.current_filter_group = widget.get_label()
         self.group_filter.refilter()
 
-    def on_changed(self, selection):
-        model, row = selection.get_selected()
-        if row is not None:
-            print(model[row][1])
-            self.selected_app = model[row][1]
-
-    def on_toggle(self, widget, path):
-        pkg = self.selected_app
-        state = None
-        for app in self.app_store:
-            if app[5] == pkg:
-                if app[3] is True:
-                    state = True
-                else:
-                    state = False
-                break
-        if state is False:
+    def on_toggle(self, cell, path):
+        state = cell.get_active()
+        index = self.app_store[path][6]
+        pkg = self.app_store[index][5]
+        installed = self.app_store[index][7]
+        self.app_store[path][3] = not state
+        if self.app_store[path][3] is False:
             if pkg in self.install_pkg:
                 print("cancel: {}".format(pkg))
                 self.install_pkg.remove(pkg)
@@ -200,9 +193,15 @@ class MainWindow(Gtk.Window):
                 print("uninstall: {}".format(pkg))
                 self.uninstall_pkg.append(pkg)
         else:
-            print("install: {}".format(pkg))
-            self.install_pkg.append(pkg)
-        path.active = state
+            if not installed:
+                print("install: {}".format(pkg))
+                self.install_pkg.append(pkg)
+            else:
+                if pkg in self.uninstall_pkg:
+                    self.uninstall_pkg.remove(pkg)
+
+        print("install: {}".format(self.install_pkg))
+        print("uninstall: {}".format(self.uninstall_pkg))
 
     def run_installer(self, widget):
         self.run_selection(self.install_pkg, self.uninstall_pkg)
