@@ -34,7 +34,8 @@ import subprocess
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-TITLE = "Manjaro Application Utility"
+VERSION = "0.1.4"
+TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
 DEBUG = False
 
@@ -217,21 +218,29 @@ class MainWindow(Gtk.Window):
         file_install = "/tmp/.install-packages.txt"
         file_uninstall = "/tmp/.remove-packages.txt"
 
-        if os.path.isfile("/usr/bin/pamac-installer"):
-            subprocess.run(["pamac-installer"] + pkg_list_install)
-        else:
-            with open(file_install, "w") as outfile:
-                for p in pkg_list_install:
+        os.environ["APP_UTILITY"] = "PACKAGES"
+        shell = False
+
+        if pkg_list_install:
+            if os.path.isfile("/usr/bin/pamac-installer"):
+                subprocess.run(["pamac-installer"] + pkg_list_install)
+            else:
+                shell = True
+                with open(file_install, "w") as outfile:
+                    for p in pkg_list_install:
+                        outfile.write("{} ".format(p))
+
+        if pkg_list_uninstall:
+            shell = True
+            with open(file_uninstall, "w") as outfile:
+                for p in pkg_list_uninstall:
                     outfile.write("{} ".format(p))
 
-        with open(file_uninstall, "w") as outfile:
-            for p in pkg_list_uninstall:
-                outfile.write("{} ".format(p))
-        os.environ["APP_UTILITY"] = "PACKAGES"
-        if DEBUG:
-            os.system('gksu-polkit ./app-install')
-        else:
-            os.system('gksu-polkit app-install')
+        if shell:
+            if DEBUG:
+                os.system('gksu-polkit ./app-install')
+            else:
+                os.system('gksu-polkit app-install')
 
 
 win = MainWindow()

@@ -37,7 +37,7 @@ echo ${IN_PKG_FILE}
 echo ${RM_PKG_FILE}
 
 # messages
-TITLE="Openbox Application Utility"
+TITLE="Manjaro Application Utility"
 UPD_DB_MSG="Updating Package Database..."
 DB_LOCKED_MSG="Another package manager is running.\n
 If you are updating the system\n
