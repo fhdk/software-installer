@@ -34,7 +34,7 @@ import subprocess
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-VERSION = "0.1.4"
+VERSION = "0.1.6"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
 DEBUG = False
