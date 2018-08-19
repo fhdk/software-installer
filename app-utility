@@ -34,7 +34,7 @@ import subprocess
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-VERSION = "0.6"
+VERSION = "0.7"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
 DEBUG = False
@@ -222,13 +222,13 @@ class MainWindow(Gtk.Window):
         shell_fallback = False
 
         if pkg_list_install:
-            if os.path.isfile("/usr/bin/pamac-installer"):
-                subprocess.run(["pamac-installer"] + pkg_list_install)
-            else:
-                shell_fallback = True
-                with open(file_install, "w") as outfile:
-                    for p in pkg_list_install:
-                        outfile.write("{} ".format(p))
+            # if os.path.isfile("/usr/bin/pamac-installer"):
+            #     subprocess.run(["pamac-installer"] + pkg_list_install)
+            # else:
+            shell_fallback = True
+            with open(file_install, "w") as outfile:
+                for p in pkg_list_install:
+                    outfile.write("{} ".format(p))
 
         if pkg_list_uninstall:
             shell_fallback = True
