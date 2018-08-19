@@ -1,6 +1,8 @@
 [
   {
-    "gid": "Internet",
+    "name": "Internet",
+    "icon": "applications-internet",
+    "description": "Browsers, Email, Files, Chat",
     "apps": [
       {
         "name": "Chromium",
@@ -101,13 +103,21 @@
     ]
   },
   {
-    "gid": "Photo and Image",
+    "name": "Graphics",
+    "icon": "applications-graphics",
+    "description": "Photos, Drawings, Image Manipulation",
     "apps": [
       {
         "name": "GIMP",
         "icon": "gimp",
         "description": "GNU Image Manipulation Program",
         "pkg": "gimp"
+      },
+      {
+        "name": "Krita",
+        "icon": "krita",
+        "description": "Digital Art Creation",
+        "pkg": "krita phonon-qt5-gstreamer"
       },
       {
         "name": "Pinta",
@@ -148,7 +158,9 @@
     ]
   },
   {
-    "gid": "Media",
+    "name": "Multimedia",
+    "icon": "applications-multimedia",
+    "description": "Music, Movies, Audio, Screencast",
     "apps": [
       {
         "name": "Parole",
@@ -161,6 +173,12 @@
         "icon": "vlc",
         "description": "Popular Open Source Media Player",
         "pkg": "vlc"
+      },
+      {
+        "name": "SM Player",
+        "icon": "smplayer",
+        "description": "Popular Open Source Media Player",
+        "pkg": "smplayer"
       },
       {
         "name": "Totem",
@@ -225,7 +243,9 @@
     ]
   },
   {
-    "gid": "Office",
+    "name": "Office",
+    "icon": "applications-office",
+    "description": "Office Apps, PDF view/edit, EPub",
     "apps": [
       {
         "name": "Qpdfview",

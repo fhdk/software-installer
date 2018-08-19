@@ -49,14 +49,15 @@ class MainWindow(Gtk.Window):
         self.set_icon_list([pixbuf24, pixbuf32, pixbuf48, pixbuf64, pixbuf96])
 
         # set data
-        self.selected_app = None
-        self.install_pkg = []
-        self.uninstall_pkg = []
-        self.groups = []
-        self.apps = self.get_app_data("./config/apps.json")
+        self.pkg_selected = None
+        self.pkg_installed = None
+        self.pkg_install = []
+        self.pkg_uninstall = []
+        self.pkg_groups = []
+        self.pkg_data = self.get_app_data("./config/apps.json")
 
         # setup main box
-        self.set_default_size(600, 600)
+        self.set_default_size(700, 600)
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self.main_box)
 
@@ -64,9 +65,10 @@ class MainWindow(Gtk.Window):
         self.title_box = Gtk.Box()
         self.title_image = Gtk.Image()
         self.title_image.set_size_request(100, 100)
-        self.title_image.set_from_file('./openbox.png')
+        # self.title_image.set_from_file("./openbox.png")
+        self.title_image.set_from_file("/usr/share/icons/manjaro/maia/96x96.png")
         self.title_label = Gtk.Label()
-        self.title_label.set_markup("<big>Openbox Application Installer</big>\n"
+        self.title_label.set_markup("<big>Manjaro Application Installer</big>\n"
                                     "Select/Deselect apps you want to install/remove.\n"
                                     "Click 'UPDATE SYSTEM' when ready.")
         self.title_box.pack_start(self.title_image, expand=False, fill=False, padding=0)
@@ -82,105 +84,161 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_store = Gtk.ListStore(str, str, str, bool, str, str, int, bool)
-        app_id = 0
-        for group in self.apps:
-            self.groups.append(group["gid"])
+        self.app_store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
+        for group in self.pkg_data:
+            self.pkg_groups.append(group["name"])
+            index = self.app_store.append(None,
+                                          [group["name"],
+                                           group["icon"],
+                                           None, group["description"], None, None, None])
             for item in group["apps"]:
-                list_item = (item["icon"],
+                list_item = (None,
+                             item["icon"],
                              item["name"],
                              item["description"],
                              False,
-                             group["gid"],
                              item["pkg"],
-                             app_id,
                              False)
                 # get install status
                 status = self.app_installed(item["pkg"])
                 if status:
                     # change status to installed
-                    list_item = (item["icon"],
+                    list_item = ("",
+                                 item["icon"],
                                  item["name"],
                                  item["description"],
                                  True,
-                                 group["gid"],
                                  item["pkg"],
-                                 app_id,
                                  True)
                 # add to the store
-                self.app_index = self.app_store.append(list_item)
-                app_id += 1
+                self.app_store.append(index, list_item)
+                # self.app_store.append(list_item)
 
-        self.tree_view = Gtk.TreeView(model=self.app_store)
+        # # initial filter on first group
+        # self.current_filter_group = self.groups[0]
+        #
+        # # create a filter, feed it with the list store model
+        # self.group_filter = self.app_store.filter_new()
+        # self.group_filter.set_visible_func(self.group_filter_func)
+
+        # create a treeview, using the filter, adding columns
+        # self.tree_view = Gtk.TreeView.new_with_model(self.group_filter)
+        self.tree_view = Gtk.TreeView.new_with_model(self.app_store)
         self.tree_view.set_activate_on_single_click(True)
 
         # column model: icon
         renderer = Gtk.CellRendererPixbuf()
-        column = Gtk.TreeViewColumn("", renderer, icon_name=0)
+        column = Gtk.TreeViewColumn("", renderer, icon_name=1)
         self.tree_view.append_column(column)
 
-        # column model: name column
+        # column model: group name column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Application", renderer, text=1)
+        column = Gtk.TreeViewColumn("Group", renderer, text=0)
+        self.tree_view.append_column(column)
+
+        # column model: app name column
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn("Application", renderer, text=2)
         self.tree_view.append_column(column)
 
         # column model: description column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Description", renderer, text=2)
+        column = Gtk.TreeViewColumn("Description", renderer, text=3)
         self.tree_view.append_column(column)
 
         # column model: install column
         toggle = Gtk.CellRendererToggle()
         toggle.connect("toggled", self.on_toggle)
-        column = Gtk.TreeViewColumn("Installed", toggle, active=3)
+        column = Gtk.TreeViewColumn("Installed", toggle, active=6)
         self.tree_view.append_column(column)
 
+        # when a row of the treeview is selected, it emits a signal
+        # self.selection = self.tree_view.get_selection()
+        # self.selection.connect("changed", self.on_changed)
+
         self.button_box = Gtk.Box(spacing=10)
+        # create filter buttons
+        self.filter_buttons = list()
+        # for group in self.groups:
+        #     button = Gtk.Button(label=group)
+        #     self.filter_buttons.append(button)
+        #     button.connect("clicked", self.on_filter_button_clicked)
+        #     self.button_box.pack_start(button, expand=False, fill=False, padding=0)
         self.install_pkg_button = Gtk.Button(label="UPDATE SYSTEM")
         self.install_pkg_button.connect("clicked", self.run_installer)
-        self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=0)
+        self.close_button = Gtk.Button(label="Close")
+        self.close_button.connect("clicked", Gtk.main_quit)
+        self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
+        self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=10)
 
         # create a scrollable window
         self.app_window = Gtk.ScrolledWindow()
         self.app_window.set_vexpand(True)
         self.app_window.add(self.tree_view)
 
-        self.grid.attach(self.app_window, 0, 0, 4, len(self.app_store))
+        self.grid.attach(self.app_window, 0, 0, 5, len(self.app_store))
         # pack button box
         self.main_box.pack_end(self.button_box, expand=False, fill=False, padding=10)
         self.show_all()
 
+    # def on_changed(self, selection):
+    #     app, index = selection.get_selected()
+    #     if index is not None:
+    #         self.pkg_selected = app[index][5]
+    #         self.pkg_installed = app[index][6]
+    #         if DEBUG:
+    #             print("group Name   : {}".format(app[index][0]))
+    #             print("app name     : {}".format(app[index][2]))
+    #             print("pkg_selected : {}".format(self.pkg_selected))
+    #             print("pkg_installed: {}".format(self.pkg_installed))
+    #     else:
+    #         self.pkg_selected = ""
+    #         self.pkg_installed = None
+    #     return True
+
     def on_toggle(self, cell, path):
-        state = cell.get_active()
-        index = self.app_store[path][6]
-        pkg = self.app_store[index][5]
-        installed = self.app_store[index][7]
-        self.app_store[path][3] = not state
-        if self.app_store[path][3] is False:
-            if pkg in self.install_pkg:
-                if DEBUG:
-                    print("cancel install: {}".format(pkg))
-                self.install_pkg.remove(pkg)
-            else:
-                if DEBUG:
-                    print("uninstall: {}".format(pkg))
-                self.uninstall_pkg.append(pkg)
-        else:
-            if not installed:
-                if DEBUG:
-                    print("install: {}".format(pkg))
-                self.install_pkg.append(pkg)
-            else:
-                if pkg in self.uninstall_pkg:
+        # a group has no package attached
+        if self.app_store[path][5] is not None:
+
+            new_state = not self.app_store[path][4]
+            self.app_store[path][4] = new_state
+            self.pkg_selected = self.app_store[path][5]
+            self.pkg_installed = self.app_store[path][6]
+
+            # check the toggle state
+            if new_state is False:
+                if self.pkg_installed is True:
+                    self.pkg_uninstall.append(self.pkg_selected)
                     if DEBUG:
-                        print("cancel uninstall: {}".format(pkg))
-                    self.uninstall_pkg.remove(pkg)
-        if DEBUG:
-            print("install pkg list: {}".format(self.install_pkg))
-            print("uninstall pkg list: {}".format(self.uninstall_pkg))
+                        print("to uninstall: {}".format(self.pkg_selected))
+                if self.pkg_selected in self.pkg_install:
+                    self.pkg_install.remove(self.pkg_selected)
+                    if DEBUG:
+                        print("cancel install: {}".format(self.pkg_selected))
+            else:
+                # # don't reinstall
+                if self.pkg_installed is False:
+                    # only new packages
+                    self.pkg_install.append(self.pkg_selected)
+                    if DEBUG:
+                        print("to install: {}".format(self.pkg_selected))
+
+            if DEBUG:
+                print("pkg_install  : {}".format(self.pkg_install))
+                print("pkg_uninstall: {}".format(self.pkg_uninstall))
+
+    # def group_filter_func(self, groups, row, data):
+    #     if self.current_filter_group is None or self.current_filter_group == "None":
+    #         return True
+    #     else:
+    #         return groups[row][4] == self.current_filter_group
+    #
+    # def on_filter_button_clicked(self, widget):
+    #     self.current_filter_group = widget.get_label()
+    #     self.group_filter.refilter()
 
     def run_installer(self, widget):
-        self.run_selection(self.install_pkg, self.uninstall_pkg)
+        self.run_selection(self.pkg_install, self.pkg_uninstall)
 
     @staticmethod
     def app_installed(app):
