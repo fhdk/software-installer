@@ -23,6 +23,10 @@
 # SOFTWARE.
 
 #set -x
+if [[ -n ${APP_UTILITY} ]]; then
+    echo "This script is part of Manjaro Application Utility\nIt is not meant to be run from command line\n exit()"
+fi
+
 # files
 IN_PKG_FILE="/tmp/.install-packages.txt"
 RM_PKG_FILE="/tmp/.remove-packages.txt"

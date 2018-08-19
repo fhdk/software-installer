@@ -32,8 +32,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-TITLE = "Openbox Application Installer"
-DEBUG = True
+TITLE = "Manjaro Application Utility"
+SHARE_DIR = "/usr/share/app-utility/"
+DEBUG = False
 
 
 class MainWindow(Gtk.Window):
@@ -54,7 +55,10 @@ class MainWindow(Gtk.Window):
         self.pkg_list_install = []
         self.pkg_list_uninstall = []
         self.pkg_groups = []
-        self.pkg_data = self.get_app_data("./config/apps.json")
+        if DEBUG:
+            self.pkg_data = self.get_app_data("./apps.json")
+        else:
+            self.pkg_data = self.get_app_data("{}/apps.json".format(SHARE_DIR))
 
         # setup main box
         self.set_default_size(700, 600)
@@ -65,7 +69,6 @@ class MainWindow(Gtk.Window):
         self.title_box = Gtk.Box()
         self.title_image = Gtk.Image()
         self.title_image.set_size_request(100, 100)
-        # self.title_image.set_from_file("./openbox.png")
         self.title_image.set_from_file("/usr/share/icons/manjaro/maia/96x96.png")
         self.title_label = Gtk.Label()
         self.title_label.set_markup("<big>Manjaro Application Installer</big>\n"
@@ -221,8 +224,7 @@ class MainWindow(Gtk.Window):
         with open(remove_file, "w") as outfile:
             for p in remove_pkg:
                 outfile.write("{} ".format(p))
-
-        # remove ./ in release depending on structure
+        os.environ["APP_UTILITY"] = "PACKAGES"
         if DEBUG:
             os.system('gksu-polkit ./app-install')
         else:
