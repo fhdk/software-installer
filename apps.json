@@ -95,10 +95,22 @@
         "pkg": "qbittorrent"
       },
       {
-        "name": "Transmission",
+        "name": "Transmission CLI",
         "icon": "transmission",
-        "description": "Popular Bittorrent Client",
-        "pkg": "transmission"
+        "description": "Command Line Bittorrent Client",
+        "pkg": "transmission-cli"
+      },
+      {
+        "name": "Transmission GTK",
+        "icon": "transmission",
+        "description": "GTK based Bittorrent Client",
+        "pkg": "transmission-gtk"
+      },
+      {
+        "name": "Transmission Qt",
+        "icon": "transmission",
+        "description": "QT based Bittorrent Client",
+        "pkg": "transmission-qt"
       }
     ]
   },
