@@ -219,24 +219,24 @@ class MainWindow(Gtk.Window):
         file_uninstall = "/tmp/.remove-packages.txt"
 
         os.environ["APP_UTILITY"] = "PACKAGES"
-        shell = False
+        shell_fallback = False
 
         if pkg_list_install:
             if os.path.isfile("/usr/bin/pamac-installer"):
                 subprocess.run(["pamac-installer"] + pkg_list_install)
             else:
-                shell = True
+                shell_fallback = True
                 with open(file_install, "w") as outfile:
                     for p in pkg_list_install:
                         outfile.write("{} ".format(p))
 
         if pkg_list_uninstall:
-            shell = True
+            shell_fallback = True
             with open(file_uninstall, "w") as outfile:
                 for p in pkg_list_uninstall:
                     outfile.write("{} ".format(p))
 
-        if shell:
+        if shell_fallback:
             if DEBUG:
                 os.system('gksu-polkit ./app-install')
             else:
