@@ -28,6 +28,8 @@ import json
 import glob
 import os
 import gi
+import subprocess
+
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
@@ -211,18 +213,19 @@ class MainWindow(Gtk.Window):
         return result
 
     @staticmethod
-    def run_selection(install_pkg, remove_pkg):
-        install_file = "/tmp/.install-packages.txt"
-        remove_file = "/tmp/.remove-packages.txt"
-        if DEBUG:
-            print(install_file)
-            print(remove_file)
-        with open(install_file, "w") as outfile:
-            for p in install_pkg:
-                outfile.write("{} ".format(p))
+    def run_selection(pkg_list_install, pkg_list_uninstall):
+        file_install = "/tmp/.install-packages.txt"
+        file_uninstall = "/tmp/.remove-packages.txt"
 
-        with open(remove_file, "w") as outfile:
-            for p in remove_pkg:
+        if os.path.isfile("/usr/bin/pamac-installer"):
+            subprocess.run(["pamac-installer"] + pkg_list_install)
+        else:
+            with open(file_install, "w") as outfile:
+                for p in pkg_list_install:
+                    outfile.write("{} ".format(p))
+
+        with open(file_uninstall, "w") as outfile:
+            for p in pkg_list_uninstall:
                 outfile.write("{} ".format(p))
         os.environ["APP_UTILITY"] = "PACKAGES"
         if DEBUG:
