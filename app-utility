@@ -71,9 +71,9 @@ class MainWindow(Gtk.Window):
         self.title_image.set_size_request(100, 100)
         self.title_image.set_from_file("/usr/share/icons/manjaro/maia/96x96.png")
         self.title_label = Gtk.Label()
-        self.title_label.set_markup("<big>Manjaro Application Installer</big>\n"
+        self.title_label.set_markup("<big>Manjaro Application Maintenance</big>\n"
                                     "Select/Deselect apps you want to install/remove.\n"
-                                    "Click 'UPDATE SYSTEM' when ready.")
+                                    "Click <b>UPDATE SYSTEM</b> button when ready.")
         self.title_box.pack_start(self.title_image, expand=False, fill=False, padding=0)
         self.title_box.pack_start(self.title_label, expand=True, fill=True, padding=0)
 
