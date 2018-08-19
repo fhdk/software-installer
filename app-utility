@@ -130,7 +130,7 @@ class MainWindow(Gtk.Window):
         # column model: install column
         toggle = Gtk.CellRendererToggle()
         toggle.connect("toggled", self.on_toggle)
-        column = Gtk.TreeViewColumn("Installed", toggle, active=6)
+        column = Gtk.TreeViewColumn("Installed", toggle, active=4)
         self.tree_view.append_column(column)
 
         self.button_box = Gtk.Box(spacing=10)
@@ -152,10 +152,9 @@ class MainWindow(Gtk.Window):
         self.show_all()
 
     def on_toggle(self, cell, path):
-        # a group has no package attached
+        # a group has no package attached and we don't install groups
         if self.app_store[path][5] is not None:
             self.app_store[path][4] = not self.app_store[path][4]
-
             self.pkg_selected = self.app_store[path][5]
             self.pkg_installed = self.app_store[path][6]
 
@@ -171,10 +170,12 @@ class MainWindow(Gtk.Window):
             else:
                 # don't reinstall
                 if self.pkg_installed is False:
-                    if self.pkg_installed not in self.pkg_list_install:
+                    if self.pkg_selected not in self.pkg_list_install:
                         self.pkg_list_install.append(self.pkg_selected)
                         if DEBUG:
                             print("to install    : {}".format(self.pkg_selected))
+                if self.pkg_selected in self.pkg_list_uninstall:
+                    self.pkg_list_uninstall.remove(self.pkg_selected)
 
             if DEBUG:
                 print("pkg list install  : {}".format(self.pkg_list_install))
