@@ -1,7 +1,7 @@
 # Maintainer: fhdk <fh at manjaro org>
 
 pkgname=manjaro-application-utility
-pkgver=0.4
+pkgver=0.5
 pkgrel=1
 pkgdesc="Manjaro Application Utility"
 arch=('any')
