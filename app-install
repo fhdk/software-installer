@@ -53,8 +53,13 @@ DONE="Your System has Been Successfully Updated"
 IN_PKG=` cat ${IN_PKG_FILE} `
 RM_PKG=` cat ${RM_PKG_FILE} `
 
-echo ${IN_PKG}
-echo ${RM_PKG}
+if [[ -f ${IN_PKG_FILE} ]]; then
+    echo ${IN_PKG}
+fi
+
+if [[ -f ${RM_PKG_FILE} ]]; then
+    echo ${RM_PKG}
+fi
 
 # Make sure only root can run our script
 if [[ $EUID -ne 0 ]]; then
@@ -66,7 +71,6 @@ fi
 pacman -Syy | tee ${PM_STATUS_FILE} | zenity --progress --title="${TITLE}" --no-cancel --pulsate --text "${UPD_DB_MSG}" --width=500 --auto-close
 
 PM_STATUS=` cat ${PM_STATUS_FILE} `
-
 
 # checking for other running package managers
 if [[ $(cat ${PM_STATUS_FILE} | grep -i 'core.db') = "" ]]
@@ -113,4 +117,3 @@ fi
 if [[ -f ${PM_LOCK_FILE} ]]; then
 	rm ${PM_LOCK_FILE}
 fi
-
