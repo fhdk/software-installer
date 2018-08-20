@@ -191,7 +191,7 @@ class MainWindow(Gtk.Window):
                     # to uninstall
                     self.pkg_list_removal.append(self.pkg_selected)
                     if DEBUG:
-                        print("to uninstall  : {}".format(self.pkg_selected))
+                        print("for removal   : {}".format(self.pkg_selected))
                 if self.pkg_selected in self.pkg_list_install:
                     # cancel install
                     self.pkg_list_install.remove(self.pkg_selected)

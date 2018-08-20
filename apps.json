@@ -1,8 +1,8 @@
 [
   {
-    "name": "Internet -Browsers",
+    "name": "Web Browsers",
     "icon": "applications-internet",
-    "description": "Browsers, Email, Files, Chat",
+    "description": "Web browsing applications",
     "apps": [
       {
         "name": "Chromium",
@@ -49,9 +49,9 @@
     ]
   },
   {
-    "name": "Internet - E-mail",
+    "name": "E-mail",
     "icon": "applications-internet",
-    "description": "Browsers, Email, Files, Chat",
+    "description": "Organize personal information",
     "apps": [
       {
         "name": "Claws Mail",
@@ -91,9 +91,9 @@
     ]
   },
   {
-    "name": "Internet - Chat",
+    "name": "Chat and Messaging",
     "icon": "applications-internet",
-    "description": "Browsers, Email, Files, Chat",
+    "description": "Messaging and online chat",
     "apps": [
       {
         "name": "HexChat",
@@ -112,9 +112,9 @@
     ]
   },
   {
-    "name": "Internet - File sharing",
+    "name": "File sharing",
     "icon": "applications-internet",
-    "description": "Browsers, Email, Files, Chat",
+    "description": "File share applications",
     "apps": [
       {
         "name": "Filezilla",
@@ -154,9 +154,9 @@
     ]
   },
   {
-    "name": "Graphics - Create and Edit",
+    "name": "Create and Edit Graphics",
     "icon": "applications-graphics",
-    "description": "Photos, Drawings, Image Manipulation",
+    "description": "Graphic Editors",
     "apps": [
       {
         "name": "GIMP",
@@ -189,9 +189,9 @@
     ]
   },
   {
-    "name": "Graphics - View and Manage",
+    "name": "Graphic Management",
     "icon": "applications-graphics",
-    "description": "Photos, Drawings, Image Manipulation",
+    "description": "View, Organize Photos and Images",
     "apps": [
       {
         "name": "Gpicview",
@@ -224,9 +224,9 @@
     ]
   },
   {
-    "name": "Multimedia - Video",
+    "name": "Video players",
     "icon": "applications-multimedia",
-    "description": "Music, Movies, Audio, Screencast",
+    "description": "Organize and play videos",
     "apps": [
       {
         "name": "Parole",
@@ -266,9 +266,9 @@
     ]
   },
   {
-    "name": "Multimedia - Audio",
+    "name": "Audio players",
     "icon": "applications-multimedia",
-    "description": "Music players",
+    "description": "Organize and play music",
     "apps": [
       {
         "name": "Audacious",
@@ -301,9 +301,9 @@
     ]
   },
   {
-    "name": "Multimedia - Editing",
+    "name": "Multimedia Editing",
     "icon": "applications-multimedia",
-    "description": "Edit, Record, Stream",
+    "description": "Edit, Record, Stream Video/Screen",
     "apps": [
       {
         "name": "Audacity",
