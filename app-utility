@@ -28,7 +28,7 @@ import json
 import glob
 import os
 import gi
-import subprocess
+# import subprocess
 
 
 gi.require_version('Gtk', '3.0')
@@ -37,7 +37,7 @@ from gi.repository import Gtk, GLib
 VERSION = "0.7"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
-DEBUG = False
+DEBUG = True
 
 
 class MainWindow(Gtk.Window):
@@ -57,7 +57,7 @@ class MainWindow(Gtk.Window):
         self.pkg_installed = None
         self.pkg_list_install = []
         self.pkg_list_uninstall = []
-        self.pkg_groups = []
+        # self.pkg_groups = []
         if DEBUG:
             self.pkg_data = self.get_app_data("./apps.json")
         else:
@@ -92,7 +92,7 @@ class MainWindow(Gtk.Window):
         # setup list store model
         self.app_store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
         for group in self.pkg_data:
-            self.pkg_groups.append(group["name"])
+            # self.pkg_groups.append(group["name"])
             index = self.app_store.append(None,
                                           [group["name"],
                                            group["icon"],
@@ -141,7 +141,7 @@ class MainWindow(Gtk.Window):
 
         self.button_box = Gtk.Box(spacing=10)
         self.install_pkg_button = Gtk.Button(label="UPDATE SYSTEM")
-        self.install_pkg_button.connect("clicked", self.run_installer)
+        self.install_pkg_button.connect("clicked", self.update_system)
         self.close_button = Gtk.Button(label="Close")
         self.close_button.connect("clicked", Gtk.main_quit)
         self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
@@ -155,7 +155,31 @@ class MainWindow(Gtk.Window):
         self.grid.attach(self.app_window, 0, 0, 5, len(self.app_store))
         # pack button box
         self.main_box.pack_end(self.button_box, expand=False, fill=False, padding=10)
+
         self.show_all()
+
+    @staticmethod
+    def app_installed(package):
+        if glob.glob("/var/lib/pacman/local/{}-[0-9]*".format(package)):
+            return True
+        return False
+
+    @staticmethod
+    def get_app_data(filename, dictionary=True):
+        """Read json data from file"""
+        result = list()
+        try:
+            if dictionary:
+                with open(filename, "rb") as infile:
+                    result = json.loads(
+                        infile.read().decode("utf8"),
+                        object_pairs_hook=collections.OrderedDict)
+            else:
+                with open(filename, "r") as infile:
+                    result = json.load(infile)
+        except OSError:
+            pass
+        return result
 
     def on_toggle(self, cell, path):
         # a group has no package attached and we don't install groups
@@ -187,53 +211,26 @@ class MainWindow(Gtk.Window):
                 print("pkg list install  : {}".format(self.pkg_list_install))
                 print("pkg list uninstall: {}".format(self.pkg_list_uninstall))
 
-    def run_installer(self, widget):
-        self.run_selection(self.pkg_list_install, self.pkg_list_uninstall)
-
-    @staticmethod
-    def app_installed(package):
-        if glob.glob("/var/lib/pacman/local/{}-[0-9]*".format(package)):
-            return True
-        return False
-
-    @staticmethod
-    def get_app_data(filename, dictionary=True):
-        """Read json data from file"""
-        result = list()
-        try:
-            if dictionary:
-                with open(filename, "rb") as infile:
-                    result = json.loads(
-                        infile.read().decode("utf8"),
-                        object_pairs_hook=collections.OrderedDict)
-            else:
-                with open(filename, "r") as infile:
-                    result = json.load(infile)
-        except OSError:
-            pass
-        return result
-
-    @staticmethod
-    def run_selection(pkg_list_install, pkg_list_uninstall):
+    def update_system(self):
         file_install = "/tmp/.install-packages.txt"
         file_uninstall = "/tmp/.remove-packages.txt"
 
         os.environ["APP_UTILITY"] = "PACKAGES"
         shell_fallback = False
 
-        if pkg_list_install:
+        if self.pkg_list_install:
             # if os.path.isfile("/usr/bin/pamac-installer"):
             #     subprocess.run(["pamac-installer"] + pkg_list_install)
             # else:
             shell_fallback = True
             with open(file_install, "w") as outfile:
-                for p in pkg_list_install:
+                for p in self.pkg_list_install:
                     outfile.write("{} ".format(p))
 
-        if pkg_list_uninstall:
+        if self.pkg_list_uninstall:
             shell_fallback = True
             with open(file_uninstall, "w") as outfile:
-                for p in pkg_list_uninstall:
+                for p in self.pkg_list_uninstall:
                     outfile.write("{} ".format(p))
 
         if shell_fallback:
@@ -241,6 +238,9 @@ class MainWindow(Gtk.Window):
                 os.system('gksu-polkit ./app-install')
             else:
                 os.system('gksu-polkit app-install')
+
+        del os.environ["APP_UTILITY"]
+        Gtk.main_quit()
 
 
 win = MainWindow()
