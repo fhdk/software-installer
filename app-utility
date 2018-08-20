@@ -43,6 +43,7 @@ DEBUG = False
 class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         GLib.set_prgname("app-utility")
         icon="system-software-install"
         pixbuf24 = Gtk.IconTheme.get_default().load_icon(icon, 24, 0)
@@ -245,6 +246,5 @@ class MainWindow(Gtk.Window):
 win = MainWindow()
 win.connect("delete-event", Gtk.main_quit)
 win.connect("destroy", Gtk.main_quit)
-win.set_position(Gtk.WindowPosition.CENTER)
 win.show_all()
 Gtk.main()

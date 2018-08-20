@@ -2,7 +2,7 @@
 
 pkgname=manjaro-application-utility
 pkgver=0.7
-pkgrel=3
+pkgrel=4
 pkgdesc="Manjaro Application Utility"
 arch=('any')
 license=('MIT')
