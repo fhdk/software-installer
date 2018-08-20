@@ -364,7 +364,7 @@
     ]
   },
   {
-    "name": "Office - Stand Alone",
+    "name": "Office - Single Applications",
     "icon": "applications-office",
     "description": "Office Apps, PDF view/edit, EPub",
     "apps": [

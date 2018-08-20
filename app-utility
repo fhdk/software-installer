@@ -39,6 +39,14 @@ TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
 DEBUG = True
 
+GROUP = 0
+ICON = 1
+APPLICATION = 2
+DESCRIPTION = 3
+ACTIVE = 4
+PACKAGE = 5
+INSTALLED = 6
+
 
 class MainWindow(Gtk.Window):
     def __init__(self):
@@ -54,14 +62,11 @@ class MainWindow(Gtk.Window):
         self.set_icon_list([pixbuf24, pixbuf32, pixbuf48, pixbuf64, pixbuf96])
 
         # set data
+        self.app_store = None
         self.pkg_selected = None
         self.pkg_installed = None
         self.pkg_list_install = []
         self.pkg_list_removal = []
-        if DEBUG:
-            self.pkg_data = self.get_app_data("./apps.json")
-        else:
-            self.pkg_data = self.get_app_data("{}/apps.json".format(SHARE_DIR))
 
         # setup main box
         self.set_default_size(700, 600)
@@ -90,61 +95,48 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
-        for group in self.pkg_data:
-            index = self.app_store.append(None,
-                                          [group["name"],
-                                           group["icon"],
-                                           None, group["description"], None, None, None])
-            for app in group["apps"]:
-                status = self.app_installed(app["pkg"])
-                tree_item = (None,
-                             app["icon"],
-                             app["name"],
-                             app["description"],
-                             status,
-                             app["pkg"],
-                             status)
-                self.app_store.append(index, tree_item)
+        self.app_store = self.load_app_data()
 
-        # create a treeview with the model store
+        # create a tree view with the model store
         self.tree_view = Gtk.TreeView.new_with_model(self.app_store)
         self.tree_view.set_activate_on_single_click(True)
 
         # column model: icon
         renderer = Gtk.CellRendererPixbuf()
-        column = Gtk.TreeViewColumn("", renderer, icon_name=1)
+        column = Gtk.TreeViewColumn("", renderer, icon_name=ICON)
         self.tree_view.append_column(column)
 
         # column model: group name column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Group", renderer, text=0)
+        column = Gtk.TreeViewColumn("Group", renderer, text=GROUP)
         self.tree_view.append_column(column)
 
         # column model: app name column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Application", renderer, text=2)
+        column = Gtk.TreeViewColumn("Application", renderer, text=APPLICATION)
         self.tree_view.append_column(column)
 
         # column model: description column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Description", renderer, text=3)
+        column = Gtk.TreeViewColumn("Description", renderer, text=DESCRIPTION)
         self.tree_view.append_column(column)
 
         # column model: install column
         toggle = Gtk.CellRendererToggle()
         toggle.connect("toggled", self.on_toggle)
-        column = Gtk.TreeViewColumn("Installed", toggle, active=4)
+        column = Gtk.TreeViewColumn("Installed", toggle, active=ACTIVE)
         self.tree_view.append_column(column)
 
         # button box
         self.button_box = Gtk.Box(spacing=10)
-        self.install_pkg_button = Gtk.Button(label="UPDATE SYSTEM")
-        self.install_pkg_button.connect("clicked", self.update_system)
+        self.reload_app_store = Gtk.Button(label="Reload")
+        self.reload_app_store.connect("clicked", self.on_reload_clicked)
+        self.update_system_button = Gtk.Button(label="UPDATE SYSTEM")
+        self.update_system_button.connect("clicked", self.on_update_system_clicked)
         self.close_button = Gtk.Button(label="Close")
         self.close_button.connect("clicked", Gtk.main_quit)
         self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
-        self.button_box.pack_end(self.install_pkg_button, expand=False, fill=False, padding=10)
+        self.button_box.pack_end(self.update_system_button, expand=False, fill=False, padding=10)
 
         # create a scrollable window
         self.app_window = Gtk.ScrolledWindow()
@@ -155,6 +147,31 @@ class MainWindow(Gtk.Window):
 
         # show start
         self.show_all()
+
+    def load_app_data(self):
+
+        if DEBUG:
+            app_data = self.get_app_data("./apps.json")
+        else:
+            app_data = self.get_app_data("{}/apps.json".format(SHARE_DIR))
+
+        store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
+        for group in app_data:
+            index = store.append(None,
+                                 [group["name"],
+                                  group["icon"],
+                                  None, group["description"], None, None, None])
+            for app in group["apps"]:
+                status = self.app_installed(app["pkg"])
+                tree_item = (None,
+                             app["icon"],
+                             app["name"],
+                             app["description"],
+                             status,
+                             app["pkg"],
+                             status)
+                store.append(index, tree_item)
+        return store
 
     @staticmethod
     def app_installed(package):
@@ -179,14 +196,17 @@ class MainWindow(Gtk.Window):
             pass
         return result
 
+    def on_reload_clicked(self, widget):
+        self.load_app_data()
+
     def on_toggle(self, cell, path):
         # a group has no package attached and we don't install groups
-        if self.app_store[path][5] is not None:
-            self.app_store[path][4] = not self.app_store[path][4]
-            self.pkg_selected = self.app_store[path][5]
-            self.pkg_installed = self.app_store[path][6]
+        if self.app_store[path][PACKAGE] is not None:
+            self.app_store[path][ACTIVE] = not self.app_store[path][ACTIVE]
+            self.pkg_selected = self.app_store[path][PACKAGE]
+            self.pkg_installed = self.app_store[path][INSTALLED]
 
-            if self.app_store[path][4] is False:
+            if self.app_store[path][ACTIVE] is False:
                 if self.pkg_installed is True:
                     # to uninstall
                     self.pkg_list_removal.append(self.pkg_selected)
@@ -212,7 +232,7 @@ class MainWindow(Gtk.Window):
                 print("pkg list install: {}".format(self.pkg_list_install))
                 print("pkg list removal: {}".format(self.pkg_list_removal))
 
-    def update_system(self, widget):
+    def on_update_system_clicked(self, widget):
         file_install = "/tmp/.install-packages.txt"
         file_uninstall = "/tmp/.remove-packages.txt"
 
