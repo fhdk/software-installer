@@ -1,8 +1,8 @@
 # Maintainer: fhdk <fh at manjaro org>
 
 pkgname=manjaro-application-utility
-pkgver=0.7
-pkgrel=4
+pkgver=0.7.1
+pkgrel=1
 pkgdesc="Manjaro Application Utility"
 arch=('any')
 license=('MIT')
@@ -12,9 +12,9 @@ provides=('manjaro-application-utility')
 conflicts=('manjaro-software-install-tool')
 replaces=('manjaro-software-install-tool')
 sha256sums=('c06ebcaeaabe8eefc71e27ce6f4ad9ed0d6fecd990c8b1dcb099ee2986f4efd8'
-            '3aacc6b2780db1ff9948e94db74204ebd6a7954b45759b62cb5209fd45b8659a'
+            '319f315f06652a1fc27ab131d127b32da5abbabba4e1b46fcc9d3b3c578d969b'
             '3f2ada3842e8e0c97c2d67b729dddf734a9359c626151c5337451122316df7b9'
-            '058c5015e2a5db6d730270d8f1e0a8157969bdc7411a23c95dd56be292d0bc8d'
+            '9d52260bc49d33705524db6868ba9c032a1969d988edc7818392babdf9cd7a6b'
             'b214e41e35b078f2e19c73e8fd3a4298678444d23efee53b8d25283432419987')
 
 package() {
