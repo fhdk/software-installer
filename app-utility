@@ -28,7 +28,7 @@ import json
 import glob
 import os
 import gi
-# import subprocess
+import subprocess
 
 
 gi.require_version('Gtk', '3.0')
@@ -37,7 +37,7 @@ from gi.repository import Gtk, GLib
 VERSION = "0.7"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
-DEBUG = False
+DEBUG = True
 
 
 class MainWindow(Gtk.Window):
@@ -57,7 +57,7 @@ class MainWindow(Gtk.Window):
         self.pkg_selected = None
         self.pkg_installed = None
         self.pkg_list_install = []
-        self.pkg_list_uninstall = []
+        self.pkg_list_removal = []
         if DEBUG:
             self.pkg_data = self.get_app_data("./apps.json")
         else:
@@ -189,7 +189,7 @@ class MainWindow(Gtk.Window):
             if self.app_store[path][4] is False:
                 if self.pkg_installed is True:
                     # to uninstall
-                    self.pkg_list_uninstall.append(self.pkg_selected)
+                    self.pkg_list_removal.append(self.pkg_selected)
                     if DEBUG:
                         print("to uninstall  : {}".format(self.pkg_selected))
                 if self.pkg_selected in self.pkg_list_install:
@@ -205,12 +205,12 @@ class MainWindow(Gtk.Window):
                         self.pkg_list_install.append(self.pkg_selected)
                         if DEBUG:
                             print("to install    : {}".format(self.pkg_selected))
-                if self.pkg_selected in self.pkg_list_uninstall:
+                if self.pkg_selected in self.pkg_list_removal:
                     # cancel uninstall
-                    self.pkg_list_uninstall.remove(self.pkg_selected)
+                    self.pkg_list_removal.remove(self.pkg_selected)
             if DEBUG:
-                print("pkg list install  : {}".format(self.pkg_list_install))
-                print("pkg list uninstall: {}".format(self.pkg_list_uninstall))
+                print("pkg list install: {}".format(self.pkg_list_install))
+                print("pkg list removal: {}".format(self.pkg_list_removal))
 
     def update_system(self, widget):
         file_install = "/tmp/.install-packages.txt"
@@ -220,18 +220,18 @@ class MainWindow(Gtk.Window):
         shell_fallback = False
 
         if self.pkg_list_install:
-            # if os.path.isfile("/usr/bin/pamac-installer"):
-            #     subprocess.run(["pamac-installer"] + pkg_list_install)
-            # else:
-            shell_fallback = True
-            with open(file_install, "w") as outfile:
-                for p in self.pkg_list_install:
-                    outfile.write("{} ".format(p))
+            if os.path.isfile("/usr/bin/pamac-installer"):
+                subprocess.run(["pamac-installer"] + self.pkg_list_install)
+            else:
+                shell_fallback = True
+                with open(file_install, "w") as outfile:
+                    for p in self.pkg_list_install:
+                        outfile.write("{} ".format(p))
 
-        if self.pkg_list_uninstall:
+        if self.pkg_list_removal:
             shell_fallback = True
             with open(file_uninstall, "w") as outfile:
-                for p in self.pkg_list_uninstall:
+                for p in self.pkg_list_removal:
                     outfile.write("{} ".format(p))
 
         if shell_fallback:
