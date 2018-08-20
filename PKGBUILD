@@ -2,7 +2,7 @@
 
 pkgname=manjaro-application-utility
 pkgver=0.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Manjaro Application Utility"
 arch=('any')
 license=('MIT')
@@ -12,7 +12,7 @@ provides=('manjaro-application-utility')
 conflicts=('manjaro-software-install-tool')
 replaces=('manjaro-software-install-tool')
 sha256sums=('c06ebcaeaabe8eefc71e27ce6f4ad9ed0d6fecd990c8b1dcb099ee2986f4efd8'
-            '319f315f06652a1fc27ab131d127b32da5abbabba4e1b46fcc9d3b3c578d969b'
+            'c92a74048334ee7745fdca909406fb322618604c45b231e0a01618695caf375b'
             '3f2ada3842e8e0c97c2d67b729dddf734a9359c626151c5337451122316df7b9'
             '9d52260bc49d33705524db6868ba9c032a1969d988edc7818392babdf9cd7a6b'
             'b214e41e35b078f2e19c73e8fd3a4298678444d23efee53b8d25283432419987')

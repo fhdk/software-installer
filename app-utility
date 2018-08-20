@@ -37,7 +37,7 @@ from gi.repository import Gtk, GLib
 VERSION = "0.7.1"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 SHARE_DIR = "/usr/share/app-utility/"
-DEBUG = True
+DEBUG = False
 
 GROUP = 0
 ICON = 1
