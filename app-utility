@@ -52,11 +52,11 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
         self.app = "app-utility"
+        self.data_set = "default"
         if "--dev" in sys.argv:
             self.share_dir = "."
         else:
             self.share_dir = "/usr/share/{}".format(self.app)
-        self.data_set = "default"
 
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         GLib.set_prgname("{}".format(self.app))
