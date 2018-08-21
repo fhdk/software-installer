@@ -29,6 +29,7 @@ import glob
 import os
 import gi
 import subprocess
+import sys
 
 
 gi.require_version('Gtk', '3.0')
@@ -36,8 +37,7 @@ from gi.repository import Gtk, GLib
 
 VERSION = "0.7.1"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
-SHARE_DIR = "/usr/share/app-utility/"
-DEBUG = False
+DEBUG = True
 
 GROUP = 0
 ICON = 1
@@ -51,8 +51,15 @@ INSTALLED = 6
 class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
+        self.app = "app-utility"
+        if "--dev" in sys.argv:
+            self.share_dir = "."
+        else:
+            self.share_dir = "/usr/share/{}".format(self.app)
+        self.data_set = "default"
+
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        GLib.set_prgname("app-utility")
+        GLib.set_prgname("{}".format(self.app))
         icon="system-software-install"
         pixbuf24 = Gtk.IconTheme.get_default().load_icon(icon, 24, 0)
         pixbuf32 = Gtk.IconTheme.get_default().load_icon(icon, 32, 0)
@@ -69,7 +76,7 @@ class MainWindow(Gtk.Window):
         self.pkg_list_removal = []
 
         # setup main box
-        self.set_default_size(700, 600)
+        self.set_default_size(750, 650)
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self.main_box)
 
@@ -95,15 +102,16 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_store = self.load_app_data()
+        self.app_store = self.load_app_data(self.data_set)
 
         # create a tree view with the model store
         self.tree_view = Gtk.TreeView.new_with_model(self.app_store)
         self.tree_view.set_activate_on_single_click(True)
 
         # column model: icon
-        renderer = Gtk.CellRendererPixbuf()
-        column = Gtk.TreeViewColumn("", renderer, icon_name=ICON)
+        icon = Gtk.CellRendererPixbuf()
+        column = Gtk.TreeViewColumn("", icon, icon_name=ICON)
+        # column.set_attributes(icon, stock_size=32)
         self.tree_view.append_column(column)
 
         # column model: group name column
@@ -123,18 +131,21 @@ class MainWindow(Gtk.Window):
 
         # column model: install column
         toggle = Gtk.CellRendererToggle()
-        toggle.connect("toggled", self.on_toggle)
+        toggle.connect("toggled", self.on_app_toggle)
         column = Gtk.TreeViewColumn("Installed", toggle, active=ACTIVE)
         self.tree_view.append_column(column)
 
         # button box
         self.button_box = Gtk.Box(spacing=10)
+        self.advanced = Gtk.ToggleButton(label="Advanced")
+        self.advanced.connect("clicked", self.on_advanced_checked)
         self.reload_button = Gtk.Button(label="reload")
-        self.reload_button.connect("clicked", self.reload_app_data)
+        self.reload_button.connect("clicked", self.on_app_reload)
         self.update_system_button = Gtk.Button(label="UPDATE SYSTEM")
         self.update_system_button.connect("clicked", self.on_update_system_clicked)
         self.close_button = Gtk.Button(label="Close")
         self.close_button.connect("clicked", Gtk.main_quit)
+        self.button_box.pack_start(self.advanced, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.update_system_button, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.reload_button, expand=False, fill=False, padding=10)
@@ -149,12 +160,9 @@ class MainWindow(Gtk.Window):
         # show start
         self.show_all()
 
-    def load_app_data(self):
+    def load_app_data(self, data_set):
 
-        if DEBUG:
-            app_data = self.get_app_data("./apps.json")
-        else:
-            app_data = self.get_app_data("{}/apps.json".format(SHARE_DIR))
+        app_data = self.get_app_data("{}/{}.json".format(self.share_dir, data_set))
 
         store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
         for group in app_data:
@@ -174,39 +182,23 @@ class MainWindow(Gtk.Window):
                 store.append(index, tree_item)
         return store
 
-    def reload_app_data(self, widget):
+    def on_app_reload(self, widget):
         self.pkg_selected = None
         self.pkg_installed = None
         self.pkg_list_install = []
         self.pkg_list_removal = []
         self.app_store.clear()
-        self.app_store = self.load_app_data()
+        self.app_store = self.load_app_data(self.data_set)
         self.tree_view.set_model(self.app_store)
 
-    @staticmethod
-    def app_installed(package):
-        if glob.glob("/var/lib/pacman/local/{}-[0-9]*".format(package)):
-            return True
-        return False
+    def on_advanced_checked(self, widget):
+        if widget.get_active():
+            self.data_set = "advanced"
+        else:
+            self.data_set = "default"
+        self.on_app_reload(widget)
 
-    @staticmethod
-    def get_app_data(filename, dictionary=True):
-        """Read json data from file"""
-        result = list()
-        try:
-            if dictionary:
-                with open(filename, "rb") as infile:
-                    result = json.loads(
-                        infile.read().decode("utf8"),
-                        object_pairs_hook=collections.OrderedDict)
-            else:
-                with open(filename, "r") as infile:
-                    result = json.load(infile)
-        except OSError:
-            pass
-        return result
-
-    def on_toggle(self, cell, path):
+    def on_app_toggle(self, cell, path):
         # a group has no package attached and we don't install groups
         if self.app_store[path][PACKAGE] is not None:
             self.app_store[path][ACTIVE] = not self.app_store[path][ACTIVE]
@@ -217,12 +209,12 @@ class MainWindow(Gtk.Window):
                 if self.pkg_installed is True:
                     # to uninstall
                     self.pkg_list_removal.append(self.pkg_selected)
-                    if DEBUG:
+                    if self.dev:
                         print("for removal   : {}".format(self.pkg_selected))
                 if self.pkg_selected in self.pkg_list_install:
                     # cancel install
                     self.pkg_list_install.remove(self.pkg_selected)
-                    if DEBUG:
+                    if self.dev:
                         print("cancel install: {}".format(self.pkg_selected))
             else:
                 # don't reinstall
@@ -230,12 +222,12 @@ class MainWindow(Gtk.Window):
                     # only install
                     if self.pkg_selected not in self.pkg_list_install:
                         self.pkg_list_install.append(self.pkg_selected)
-                        if DEBUG:
+                        if self.dev:
                             print("to install    : {}".format(self.pkg_selected))
                 if self.pkg_selected in self.pkg_list_removal:
                     # cancel uninstall
                     self.pkg_list_removal.remove(self.pkg_selected)
-            if DEBUG:
+            if self.dev:
                 print("pkg list install: {}".format(self.pkg_list_install))
                 print("pkg list removal: {}".format(self.pkg_list_removal))
 
@@ -262,16 +254,40 @@ class MainWindow(Gtk.Window):
                     outfile.write("{} ".format(p))
 
         if shell_fallback:
-            if DEBUG:
+            if self.dev:
                 os.system('gksu-polkit ./app-install')
             else:
                 os.system('gksu-polkit app-install')
 
         Gtk.main_quit()
 
+    @staticmethod
+    def app_installed(package):
+        if glob.glob("/var/lib/pacman/local/{}-[0-9]*".format(package)):
+            return True
+        return False
 
-win = MainWindow()
-win.connect("delete-event", Gtk.main_quit)
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
-Gtk.main()
+    @staticmethod
+    def get_app_data(filename, dictionary=True):
+        """Read json data from file"""
+        result = list()
+        try:
+            if dictionary:
+                with open(filename, "rb") as infile:
+                    result = json.loads(
+                        infile.read().decode("utf8"),
+                        object_pairs_hook=collections.OrderedDict)
+            else:
+                with open(filename, "r") as infile:
+                    result = json.load(infile)
+        except OSError:
+            pass
+        return result
+
+
+if __name__ == "__main__":
+    win = MainWindow()
+    win.connect("delete-event", Gtk.main_quit)
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()

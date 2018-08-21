@@ -50,14 +50,13 @@ IN_WORKING_MSG="Installing Packages..."
 RM_WORKING_MSG="Uninstalling Packages..."
 DONE="Your System has Been Successfully Updated"
 
-IN_PKG=` cat ${IN_PKG_FILE} `
-RM_PKG=` cat ${RM_PKG_FILE} `
-
 if [[ -f ${IN_PKG_FILE} ]]; then
+    IN_PKG=` cat ${IN_PKG_FILE} `
     echo ${IN_PKG}
 fi
 
 if [[ -f ${RM_PKG_FILE} ]]; then
+    RM_PKG=` cat ${RM_PKG_FILE} `
     echo ${RM_PKG}
 fi
 
