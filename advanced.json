@@ -2,14 +2,14 @@
   {
     "name": "Browsers",
     "icon": "browser",
-    "description": "Web browsning and communication",
+    "description": "Web browsing and communication",
     "apps": [
       {
         "name": "Chromium",
         "icon": "chromium",
         "description": "Open Sourced Chrome Browser",
         "pkg": "chromium",
-        "extra": []
+        "extra": [],
       },
       {
         "name": "Falkon",
@@ -464,6 +464,13 @@
         "icon": "lollypop",
         "description": "Play and organize your music collection",
         "pkg": "deadbeef",
+        "extra": []
+      },
+      {
+        "name": "Rhythmbox",
+        "icon": "rhythmbox",
+        "description": "Gnome music playing application",
+        "pkg": "rhythmbox",
         "extra": []
       }
     ]

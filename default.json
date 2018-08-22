@@ -65,15 +65,8 @@
   {
     "name": "Text Editors",
     "icon": "text-editor",
-    "description": "Various editors for text or code",
+    "description": "Simple editors for text or code",
     "apps": [
-      {
-        "name": "Geany",
-        "icon": "geany",
-        "description": "A fast and lightweight IDE using GTK+",
-        "pkg": "geany",
-        "extra": []
-      },
       {
         "name": "Mousepad",
         "icon": "mousepad",
@@ -91,9 +84,9 @@
     ]
   },
   {
-    "name": "Disk Utils",
+    "name": "System Tools",
     "icon": "disk-utility",
-    "description": "Utilities for disks",
+    "description": "System Utilities",
     "apps": [
       {
         "name": "Gnome Disks",
@@ -115,8 +108,14 @@
         "description": "Format or wirte imges to usb sticks (Linux Mint tool).",
         "pkg": "mintstick",
         "extra": []
-      }
-    ]
+      },
+      {
+        "name": "Pamac",
+        "icon": "pamac-updater",
+        "description": "Update your System, Add/Remove Software from repo and AUR",
+        "pkg": "pamac",
+        "extra": []
+      }    ]
   },
   {
     "name": "Security",
@@ -180,10 +179,10 @@
         "extra": []
       },
       {
-        "name": "Transmission GTK",
-        "icon": "transmission",
-        "description": "GTK based Bittorrent Client",
-        "pkg": "transmission-gtk",
+        "name": "qBittorrent",
+        "icon": "qbittorrent",
+        "description": "Bittorrent Client",
+        "pkg": "qbittorrent",
         "extra": []
       }
     ]
@@ -194,10 +193,10 @@
     "description": "Creating and editing graphics",
     "apps": [
       {
-        "name": "GIMP",
-        "icon": "gimp",
+        "name": "Krita",
+        "icon": "krita",
         "description": "Create images and edit photographs",
-        "pkg": "gimp",
+        "pkg": "krita",
         "extra": []
       },
       {
@@ -222,17 +221,24 @@
     "description": "Viewers and organizers",
     "apps": [
       {
+        "name": "gThumb",
+        "icon": "gthumb",
+        "description": "View and organize your images",
+        "pkg": "viewnior",
+        "extra": []
+      } ,
+      {
+        "name": "Gwenview",
+        "icon": "gwenview",
+        "description": "Image Viewer",
+        "pkg": "gwenview",
+        "extra": []
+      },
+      {
         "name": "Shotwell",
         "icon": "shotwell",
         "description": "Popular Photo Manager",
         "pkg": "shotwell",
-        "extra": []
-      },
-      {
-        "name": "Viewnior",
-        "icon": "viewnior",
-        "description": "GTK based Elegant Image Viewer",
-        "pkg": "viewnior",
         "extra": []
       }
     ]
@@ -271,17 +277,10 @@
         "extra": []
       },
       {
-        "name": "DeadBeeF",
-        "icon": "deadbeef",
-        "description": "Listen to music",
-        "pkg": "deadbeef",
-        "extra": []
-      },
-      {
-        "name": "Lollypop",
-        "icon": "lollypop",
-        "description": "Play and organize your music collection",
-        "pkg": "deadbeef",
+        "name": "Rhythmbox",
+        "icon": "rhythmbox",
+        "description": "Gnome music playing application",
+        "pkg": "rhythmbox",
         "extra": []
       }
     ]
@@ -320,10 +319,10 @@
         "extra": []
       },
       {
-        "name": "PDFMod",
-        "icon": "pdfmod",
-        "description": "Remove, extract and rotate pages in PDF Documents",
-        "pkg": "pdfmod",
+        "name": "Okular",
+        "icon": "okular",
+        "description": "Document Viewer",
+        "pkg": "okular",
         "extra": []
       }
     ]

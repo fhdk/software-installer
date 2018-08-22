@@ -76,7 +76,7 @@ class MainWindow(Gtk.Window):
         self.pkg_list_removal = []
 
         # setup main box
-        self.set_default_size(750, 650)
+        self.set_default_size(800, 650)
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self.main_box)
 
