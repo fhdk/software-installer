@@ -51,15 +51,18 @@ INSTALLED = 6
 class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
-        self.app = "app-utility"
-        self.data_set = "default"
+        self.pref = {
+            "app": "app-utility",
+            "data_set": "default",
+            "share_dir": "/usr/share/app.utility",
+            "conf_dir": "~/.config"
+        }
         if "--dev" in sys.argv:
-            self.share_dir = "."
-        else:
-            self.share_dir = "/usr/share/{}".format(self.app)
+            self.pref["share_dir"] = "."
+            self.pref["conf_dir"] = "."
 
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        GLib.set_prgname("{}".format(self.app))
+        GLib.set_prgname("{}".format(self.pref["app"]))
         icon="system-software-install"
         pixbuf24 = Gtk.IconTheme.get_default().load_icon(icon, 24, 0)
         pixbuf32 = Gtk.IconTheme.get_default().load_icon(icon, 32, 0)
@@ -102,7 +105,7 @@ class MainWindow(Gtk.Window):
         self.main_box.add(self.grid)
 
         # setup list store model
-        self.app_store = self.load_app_data(self.data_set)
+        self.app_store = self.load_app_data(self.pref["data_set"])
 
         # create a tree view with the model store
         self.tree_view = Gtk.TreeView.new_with_model(self.app_store)
@@ -111,7 +114,6 @@ class MainWindow(Gtk.Window):
         # column model: icon
         icon = Gtk.CellRendererPixbuf()
         column = Gtk.TreeViewColumn("", icon, icon_name=ICON)
-        # column.set_attributes(icon, stock_size=32)
         self.tree_view.append_column(column)
 
         # column model: group name column
@@ -138,17 +140,20 @@ class MainWindow(Gtk.Window):
         # button box
         self.button_box = Gtk.Box(spacing=10)
         self.advanced = Gtk.ToggleButton(label="Advanced")
-        self.advanced.connect("clicked", self.on_advanced_checked)
+        self.advanced.connect("clicked", self.on_expert_clicked)
+        self.download = Gtk.Button(label="download")
+        self.download.connect("clicked", self.on_download_clicked)
         self.reload_button = Gtk.Button(label="reload")
-        self.reload_button.connect("clicked", self.on_app_reload)
+        self.reload_button.connect("clicked", self.on_reload_clicked)
         self.update_system_button = Gtk.Button(label="UPDATE SYSTEM")
         self.update_system_button.connect("clicked", self.on_update_system_clicked)
-        self.close_button = Gtk.Button(label="Close")
+        self.close_button = Gtk.Button(label="close")
         self.close_button.connect("clicked", Gtk.main_quit)
         self.button_box.pack_start(self.advanced, expand=False, fill=False, padding=10)
-        self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.update_system_button, expand=False, fill=False, padding=10)
+        self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.reload_button, expand=False, fill=False, padding=10)
+        self.button_box.pack_end(self.download, expand=False, fill=False, padding=10)
 
         # create a scrollable window
         self.app_window = Gtk.ScrolledWindow()
@@ -162,7 +167,7 @@ class MainWindow(Gtk.Window):
 
     def load_app_data(self, data_set):
 
-        app_data = self.get_app_data("{}/{}.json".format(self.share_dir, data_set))
+        app_data = self.get_app_data("{}/{}.json".format(self.pref["share_dir"], data_set))
 
         store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
         for group in app_data:
@@ -182,21 +187,24 @@ class MainWindow(Gtk.Window):
                 store.append(index, tree_item)
         return store
 
-    def on_app_reload(self, widget):
+    def on_reload_clicked(self, widget):
         self.pkg_selected = None
         self.pkg_installed = None
         self.pkg_list_install = []
         self.pkg_list_removal = []
         self.app_store.clear()
-        self.app_store = self.load_app_data(self.data_set)
+        self.app_store = self.load_app_data(self.pref["data_set"])
         self.tree_view.set_model(self.app_store)
 
-    def on_advanced_checked(self, widget):
+    def on_expert_clicked(self, widget):
         if widget.get_active():
-            self.data_set = "advanced"
+            self.pref["data_set"] = "advanced"
         else:
-            self.data_set = "default"
-        self.on_app_reload(widget)
+            self.pref["data_set"] = "default"
+        self.on_reload_clicked(widget)
+
+    def on_download_clicked(self, widget):
+        pass
 
     def on_app_toggle(self, cell, path):
         # a group has no package attached and we don't install groups

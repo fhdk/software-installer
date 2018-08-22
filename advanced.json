@@ -9,7 +9,7 @@
         "icon": "chromium",
         "description": "Open Sourced Chrome Browser",
         "pkg": "chromium",
-        "extra": [],
+        "extra": []
       },
       {
         "name": "Falkon",
@@ -154,9 +154,9 @@
     ]
   },
   {
-    "name": "Disk Utils",
+    "name": "System Tools",
     "icon": "disk-utility",
-    "description": "Utilities for disks",
+    "description": "System utilities",
     "apps": [
       {
         "name": "Gnome Disks",
@@ -184,6 +184,20 @@
         "icon": "mintstick",
         "description": "Format or wirte imges to usb sticks (Linux Mint tool).",
         "pkg": "mintstick",
+        "extra": []
+      },
+      {
+        "name": "Pamac",
+        "icon": "pamac-updater",
+        "description": "Update your System, Add/Remove Software from repo and AUR",
+        "pkg": "pamac",
+        "extra": []
+      },
+      {
+        "name": "Yay",
+        "icon": "terminal",
+        "description": "CLI AUR helper",
+        "pkg": "yay",
         "extra": []
       }
     ]

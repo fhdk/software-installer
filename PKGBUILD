@@ -12,10 +12,10 @@ provides=('manjaro-application-utility')
 conflicts=('manjaro-software-install-tool')
 replaces=('manjaro-software-install-tool')
 sha256sums=('4a6fec6f9e22977f4a859c7234c3ddacbce2829ddd8531c5c16386e232724848'
-            '4e75efb1729f38e338d880b005ef5f39b1276e54cda811be2f5945ef1257f716'
+            '4fe547e7b133cf94e28d83f12ed01e81a07e2679b4f1697b409d65ba84304fa6'
             '3f2ada3842e8e0c97c2d67b729dddf734a9359c626151c5337451122316df7b9'
-            'dedbf65f44033a330d76dbeacda449942ac6133292bad7e236bf38eaca7343d5'
-            '7a05876d3bedd97f01064ef97246e9c7ab6bffdf0f71f5bb023e769e7de06dcd'
+            'aff497c86b0ee505fd58b2e83eb8895cff4d85f4cf25bb12d4a98ffba2697e51'
+            '481ae4b3e8c4e92b80ffb9eec287c45dbfa71556b863217b668679853c38fa5a'
             '198fa22b0f276c8810470fbb3cec7fac6fb48473092daeb150668c1610a7f52f')
 
 package() {

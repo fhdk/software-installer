@@ -115,7 +115,8 @@
         "description": "Update your System, Add/Remove Software from repo and AUR",
         "pkg": "pamac",
         "extra": []
-      }    ]
+      }
+    ]
   },
   {
     "name": "Security",
