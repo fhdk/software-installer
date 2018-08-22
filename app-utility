@@ -27,15 +27,15 @@ import collections
 import json
 import glob
 import os
-import gi
 import subprocess
 import sys
+import urllib.request
 
-
+import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-VERSION = "0.7.1"
+VERSION = "0.8"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 DEBUG = True
 
@@ -51,18 +51,21 @@ INSTALLED = 6
 class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=TITLE, border_width=6)
+        self.app = "app-utility"
         self.pref = {
-            "app": "app-utility",
             "data_set": "default",
-            "share_dir": "/usr/share/app.utility",
-            "conf_dir": "~/.config"
+            "conf_dir": "~/.config",
+            "share_dir": "/usr/share/{}".format(self.app),
+            "data_sets": ["default", "advanced"],
+            "url": "https://gitlab.manjaro.org/fhdk/application-utility/raw/master"
         }
-        if "--dev" in sys.argv:
+
+        self.dev = "--dev" in sys.argv
+        if self.dev:
             self.pref["share_dir"] = "."
-            self.pref["conf_dir"] = "."
 
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        GLib.set_prgname("{}".format(self.pref["app"]))
+        GLib.set_prgname("{}".format(self.app))
         icon="system-software-install"
         pixbuf24 = Gtk.IconTheme.get_default().load_icon(icon, 24, 0)
         pixbuf32 = Gtk.IconTheme.get_default().load_icon(icon, 32, 0)
@@ -166,8 +169,10 @@ class MainWindow(Gtk.Window):
         self.show_all()
 
     def load_app_data(self, data_set):
-
-        app_data = self.get_app_data("{}/{}.json".format(self.pref["share_dir"], data_set))
+        if os.path.isfile("{}/{}.json".format(self.pref["conf_dir"], data_set)):
+            app_data = self.read_json_file("{}/{}.json".format(self.pref["conf_dir"], data_set))
+        else:
+            app_data = self.read_json_file("{}/{}.json".format(self.pref["share_dir"], data_set))
 
         store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
         for group in app_data:
@@ -187,24 +192,47 @@ class MainWindow(Gtk.Window):
                 store.append(index, tree_item)
         return store
 
-    def on_reload_clicked(self, widget):
+    def reload_app_data(self, dataset):
         self.pkg_selected = None
         self.pkg_installed = None
         self.pkg_list_install = []
         self.pkg_list_removal = []
         self.app_store.clear()
-        self.app_store = self.load_app_data(self.pref["data_set"])
+        self.app_store = self.load_app_data(dataset)
         self.tree_view.set_model(self.app_store)
+
+    def on_reload_clicked(self, widget):
+        self.reload_app_data(self.pref["data_set"])
 
     def on_expert_clicked(self, widget):
         if widget.get_active():
             self.pref["data_set"] = "advanced"
         else:
             self.pref["data_set"] = "default"
-        self.on_reload_clicked(widget)
+        self.reload_app_data(self.pref["data_set"])
 
     def on_download_clicked(self, widget):
-        pass
+        if self.net_check():
+            # noinspection PyBroadException
+            try:
+                for download in self.pref["data_sets"]:
+                    url = "{}/{}.json".format(self.pref["url"], download)
+                    file = self.fix_path("{}/{}.json".format(self.pref["conf_dir"], download))
+                    req = urllib.request.Request(url=url)
+                    with urllib.request.urlopen(req, timeout=2) as response:
+                        data = json.loads(response.read().decode("utf8"))
+                        self.write_json_file(data, file)
+
+            except Exception as e:
+                print(e)
+
+        else:
+            dialog = Gtk.MessageDialog(self, 0,
+                                       Gtk.MessageType.ERROR,
+                                       Gtk.ButtonsType.CANCEL,
+                                       "Download not available")
+            dialog.format_secondary.text("The server 'gitlab.manjaro.org' could not be reached")
+            dialog.run()
 
     def on_app_toggle(self, cell, path):
         # a group has no package attached and we don't install groups
@@ -276,7 +304,31 @@ class MainWindow(Gtk.Window):
         return False
 
     @staticmethod
-    def get_app_data(filename, dictionary=True):
+    def fix_path(path):
+        """Make good paths.
+        :param path: path to fix
+        :type path: str
+        :return: fixed path
+        :rtype: str
+        """
+        if "~" in path:
+            path = path.replace("~", os.path.expanduser("~"))
+        return path
+
+    @staticmethod
+    def net_check():
+        """Check for internet connection"""
+        resp = None
+        host = "https://gitlab.manjaro.org"
+        # noinspection PyBroadException
+        try:
+            resp = urllib.request.urlopen(host, timeout=2)
+        except Exception:
+            pass
+        return bool(resp)
+
+    @staticmethod
+    def read_json_file(filename, dictionary=True):
         """Read json data from file"""
         result = list()
         try:
@@ -291,6 +343,24 @@ class MainWindow(Gtk.Window):
         except OSError:
             pass
         return result
+
+    @staticmethod
+    def write_json_file(data, filename, dictionary=False):
+        """Writes data to file as json
+        :param data
+        :param filename:
+        :param dictionary:
+        """
+        try:
+            if dictionary:
+                with open(filename, "wb") as outfile:
+                    json.dump(data, outfile)
+            else:
+                with open(filename, "w") as outfile:
+                    json.dump(data, outfile, indent=2)
+            return True
+        except OSError:
+            return False
 
 
 if __name__ == "__main__":
