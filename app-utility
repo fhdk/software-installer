@@ -75,6 +75,7 @@ class MainWindow(Gtk.Window):
         self.set_icon_list([pixbuf24, pixbuf32, pixbuf48, pixbuf64, pixbuf96])
 
         # set data
+        self.app_data = []
         self.app_store = None
         self.pkg_selected = None
         self.pkg_installed = None
@@ -170,16 +171,16 @@ class MainWindow(Gtk.Window):
 
     def load_app_data(self, data_set):
         if os.path.isfile("{}/{}.json".format(self.pref["conf_dir"], data_set)):
-            app_data = self.read_json_file("{}/{}.json".format(self.pref["conf_dir"], data_set))
+            self.app_data = self.read_json_file("{}/{}.json".format(self.pref["conf_dir"], data_set))
         else:
-            app_data = self.read_json_file("{}/{}.json".format(self.pref["share_dir"], data_set))
+            self.app_data = self.read_json_file("{}/{}.json".format(self.pref["share_dir"], data_set))
 
-        store = Gtk.TreeStore(str, str, str, str, bool, str, bool, list)
-        for group in app_data:
+        store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
+        for group in self.app_data:
             index = store.append(None,
                                  [group["name"],
                                   group["icon"],
-                                  None, group["description"], None, None, None, None])
+                                  None, group["description"], None, None, None])
             for app in group["apps"]:
                 status = self.app_installed(app["pkg"])
                 tree_item = (None,
@@ -188,18 +189,18 @@ class MainWindow(Gtk.Window):
                              app["description"],
                              status,
                              app["pkg"],
-                             status,
-                             app["extra"])
+                             status)
                 store.append(index, tree_item)
         return store
 
-    def reload_app_data(self, dataset):
+    def reload_app_data(self, data_set):
+        self.app_data = []
         self.pkg_selected = None
         self.pkg_installed = None
         self.pkg_list_install = []
         self.pkg_list_removal = []
         self.app_store.clear()
-        self.app_store = self.load_app_data(dataset)
+        self.app_store = self.load_app_data(data_set)
         self.tree_view.set_model(self.app_store)
 
     def on_reload_clicked(self, widget):
@@ -241,7 +242,11 @@ class MainWindow(Gtk.Window):
             self.app_store[path][ACTIVE] = not self.app_store[path][ACTIVE]
             self.pkg_selected = self.app_store[path][PACKAGE]
             self.pkg_installed = self.app_store[path][INSTALLED]
-            pkg_extra = self.app_store[path][EXTRA]
+            pkg_extra = []
+            for group in self.app_data:
+                for app in group["apps"]:
+                    if app["pkg"] == self.pkg_selected:
+                        pkg_extra = app["extra"]
 
             if self.app_store[path][ACTIVE] is False:
                 if self.pkg_installed is True:
@@ -253,6 +258,8 @@ class MainWindow(Gtk.Window):
                     # cancel install
                     self.pkg_list_install.remove(self.pkg_selected)
                     if pkg_extra:
+                        if self.dev:
+                            print("cancel install: {}".format(pkg_extra))
                         for p in pkg_extra:
                             if p in self.pkg_list_install:
                                 self.pkg_list_install.remove(p)
@@ -265,6 +272,8 @@ class MainWindow(Gtk.Window):
                     if self.pkg_selected not in self.pkg_list_install:
                         self.pkg_list_install.append(self.pkg_selected)
                         if pkg_extra:
+                            if self.dev:
+                                print("extra pkg install : {}".format(pkg_extra))
                             for p in pkg_extra:
                                 self.pkg_list_install.append(p)
                         if self.dev:

@@ -105,7 +105,7 @@
         "name": "PCManFM",
         "icon": "system-file-manager",
         "description": "PCManFM lightweight file manager",
-        "pkg": "pcmanfm-gtk3",
+        "pkg": "pcmanfm",
         "extra": [
           "ffmpegthunmbnailer",
           "thunar-archive-pluging-gtk3",
