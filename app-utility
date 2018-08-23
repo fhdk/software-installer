@@ -35,7 +35,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-VERSION = "0.8"
+VERSION = "0.9"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 
 GROUP = 0
@@ -45,7 +45,6 @@ DESCRIPTION = 3
 ACTIVE = 4
 PACKAGE = 5
 INSTALLED = 6
-EXTRA = 7
 
 
 class MainWindow(Gtk.Window):

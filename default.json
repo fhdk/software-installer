@@ -124,6 +124,13 @@
     "description": "Security oriented utilities",
     "apps": [
       {
+        "name": "Firewall",
+        "icon": "network-firewall",
+        "description": "Graphical Firewall Manager",
+        "pkg": "gufw",
+        "extra": []
+      },
+      {
         "name": "KeePassX",
         "icon": "keepassx",
         "description": "Cross Platform Password Manager",
@@ -227,7 +234,7 @@
         "description": "View and organize your images",
         "pkg": "viewnior",
         "extra": []
-      } ,
+      },
       {
         "name": "Gwenview",
         "icon": "gwenview",
