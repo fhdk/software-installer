@@ -37,7 +37,6 @@ from gi.repository import Gtk, GLib
 
 VERSION = "0.8"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
-DEBUG = True
 
 GROUP = 0
 ICON = 1
@@ -46,6 +45,7 @@ DESCRIPTION = 3
 ACTIVE = 4
 PACKAGE = 5
 INSTALLED = 6
+EXTRA = 7
 
 
 class MainWindow(Gtk.Window):
@@ -174,12 +174,12 @@ class MainWindow(Gtk.Window):
         else:
             app_data = self.read_json_file("{}/{}.json".format(self.pref["share_dir"], data_set))
 
-        store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
+        store = Gtk.TreeStore(str, str, str, str, bool, str, bool, list)
         for group in app_data:
             index = store.append(None,
                                  [group["name"],
                                   group["icon"],
-                                  None, group["description"], None, None, None])
+                                  None, group["description"], None, None, None, None])
             for app in group["apps"]:
                 status = self.app_installed(app["pkg"])
                 tree_item = (None,
@@ -188,7 +188,8 @@ class MainWindow(Gtk.Window):
                              app["description"],
                              status,
                              app["pkg"],
-                             status)
+                             status,
+                             app["extra"])
                 store.append(index, tree_item)
         return store
 
@@ -240,6 +241,7 @@ class MainWindow(Gtk.Window):
             self.app_store[path][ACTIVE] = not self.app_store[path][ACTIVE]
             self.pkg_selected = self.app_store[path][PACKAGE]
             self.pkg_installed = self.app_store[path][INSTALLED]
+            pkg_extra = self.app_store[path][EXTRA]
 
             if self.app_store[path][ACTIVE] is False:
                 if self.pkg_installed is True:
@@ -250,6 +252,10 @@ class MainWindow(Gtk.Window):
                 if self.pkg_selected in self.pkg_list_install:
                     # cancel install
                     self.pkg_list_install.remove(self.pkg_selected)
+                    if pkg_extra:
+                        for p in pkg_extra:
+                            if p in self.pkg_list_install:
+                                self.pkg_list_install.remove(p)
                     if self.dev:
                         print("cancel install: {}".format(self.pkg_selected))
             else:
@@ -258,6 +264,9 @@ class MainWindow(Gtk.Window):
                     # only install
                     if self.pkg_selected not in self.pkg_list_install:
                         self.pkg_list_install.append(self.pkg_selected)
+                        if pkg_extra:
+                            for p in pkg_extra:
+                                self.pkg_list_install.append(p)
                         if self.dev:
                             print("to install    : {}".format(self.pkg_selected))
                 if self.pkg_selected in self.pkg_list_removal:

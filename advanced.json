@@ -1,5 +1,260 @@
 [
   {
+    "name": "Backup and Recovery",
+    "icon": "deja-dup",
+    "description": "Backup and Recovery utilites",
+    "apps": [
+      {
+        "name": "Clonezilla",
+        "icon": "terminal",
+        "description": "Clone your partitions for security",
+        "pkg": "clonezilla",
+        "extra": []
+      },
+      {
+        "name": "Deja Dup",
+        "icon": "deja-dup",
+        "description": "Keep your important documents safe from disater",
+        "pkg": "deja-dup",
+        "extra": []
+      },
+      {
+        "name": "Grsync",
+        "icon": "grsync",
+        "description": "Synchronize files and folders",
+        "pkg": "grsync",
+        "extra": []
+      },
+      {
+        "name": "Testdisk",
+        "icon": "terminal",
+        "description": "File recovery software",
+        "pkg": "testdisk",
+        "extra": []
+      },
+      {
+        "name": "Timeshift",
+        "icon": "timeshift",
+        "description": "A system restore utility for Linux",
+        "pkg": "timeshift",
+        "extra": []
+      }
+    ]
+  },
+  {
+    "name": "Text Editors",
+    "icon": "text-editor",
+    "description": "Various editors for text or code",
+    "apps": [
+      {
+        "name": "Atom",
+        "icon": "atom",
+        "description": "A hackable text editor for the 21st Century",
+        "pkg": "atom",
+        "extra": []
+      },
+      {
+        "name": "Geany",
+        "icon": "geany",
+        "description": "A fast and lightweight IDE using GTK+",
+        "pkg": "geany",
+        "extra": []
+      },
+      {
+        "name": "Micro Manjaro",
+        "icon": "terminal",
+        "description": "Nano like terminal editor with mouse support",
+        "pkg": "micro-manjaro",
+        "extra": ["dash", "terminus-font"]
+      },
+      {
+        "name": "Mousepad",
+        "icon": "mousepad",
+        "description": "Simple Text Editor",
+        "pkg": "mousepad",
+        "extra": []
+      },
+      {
+        "name": "Xed",
+        "icon": "xed",
+        "description": "A small and lightweight text editor. X Apps Project",
+        "pkg": "xed",
+        "extra": []
+      }
+    ]
+  },
+  {
+    "name": "File Manager",
+    "icon": "system-file-manager",
+    "description": "File Managers",
+    "apps": [
+      {
+        "name": "Thunar",
+        "icon": "thunar",
+        "description": "Thunar file manager",
+        "pkg": "thunar-gtk3",
+        "extra": [
+          "ffmpegthunmbnailer",
+          "thunar-archive-pluging-gtk3",
+          "thunar-media-tags-plugin",
+          "thunar-volman-gtk3",
+          "tumbler"
+        ]
+      },
+      {
+        "name": "PCManFM",
+        "icon": "system-file-manager",
+        "description": "PCManFM lightweight file manager",
+        "pkg": "pcmanfm-gtk3",
+        "extra": [
+          "ffmpegthunmbnailer",
+          "thunar-archive-pluging-gtk3",
+          "thunar-media-tags-plugin",
+          "thunar-volman-gtk3",
+          "tumbler"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "System Tools",
+    "icon": "disk-utility",
+    "description": "System utilities",
+    "apps": [
+      {
+        "name": "Build support",
+        "icon": "system-software-install",
+        "description": "AUR Build support",
+        "pkg": "base-devel",
+        "extra": []
+      },
+      {
+        "name": "Gnome Disks",
+        "icon": "gnome-disks",
+        "description": "Disk management system for Gnome",
+        "pkg": "gnome-disk-utility",
+        "extra": []
+      },
+      {
+        "name": "Gparted",
+        "icon": "gparted",
+        "description": "Create, reorganize, and delete partitions",
+        "pkg": "gparted",
+        "extra": []
+      },
+      {
+        "name": "IsoUSB",
+        "icon": "usb-creator",
+        "description": "A graphical tool to copy a hybrid ISO onto a USB key.",
+        "pkg": "isousb",
+        "extra": []
+      },
+      {
+        "name": "Mintstick",
+        "icon": "mintstick",
+        "description": "Format or wirte imges to usb sticks (Linux Mint tool).",
+        "pkg": "mintstick",
+        "extra": []
+      },
+      {
+        "name": "Pamac",
+        "icon": "pamac-updater",
+        "description": "Update your System, Add/Remove Software from repo and AUR",
+        "pkg": "pamac",
+        "extra": []
+      },
+      {
+        "name": "Yay",
+        "icon": "terminal",
+        "description": "CLI AUR helper",
+        "pkg": "yay",
+        "extra": []
+      },
+      {
+        "name": "Connect packages",
+        "icon": "terminal",
+        "description": "afc, mtp, nfs, smb, usb",
+        "pkg": "gvfs",
+        "extra": [
+          "gvfs-afc",
+          "gvfs-mtp",
+          "gvfs-nfs",
+          "gvfs-smb",
+          "udiskie"
+        ]
+      },
+      {
+        "name": "Network Tools",
+        "icon": "terminal",
+        "description": "ssh, arp-scan, bind-tools, net-tools, traceroute, whois",
+        "pkg": "openssh",
+        "extra": [
+          "arp-scan",
+          "bind-tools",
+          "net-tools",
+          "traceroute",
+          "whois"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Security",
+    "icon": "security-high",
+    "description": "Security oriented utilities",
+    "apps": [
+      {
+        "name": "Firewall",
+        "icon": "network-firewall",
+        "description": "Graphical Firewall Manager",
+        "pkg": "gufw",
+        "extra": []
+      },
+      {
+        "name": "KeePassX",
+        "icon": "keepassx",
+        "description": "Cross Platform Password Manager",
+        "pkg": "keepassx",
+        "extra": []
+      },
+      {
+        "name": "SeaHorse",
+        "icon": "seahorse",
+        "description": "Manage your passwords and encryption keys",
+        "pkg": "seahorse",
+        "extra": []
+      },
+      {
+        "name": "VeraCrypt",
+        "icon": "veracrypt",
+        "description": "Disk encryption with strong security based on TrueCrypt",
+        "pkg": "veracrypt",
+        "extra": []
+      }
+    ]
+  },
+  {
+    "name": "Virtual Computing",
+    "icon": "virt-manager",
+    "description": "Virtual Machine applications",
+    "apps": [
+      {
+        "name": "VirtualBox",
+        "icon": "virtualbox",
+        "description": "Run several virtual systems on a single host computer",
+        "pkg": "calibre",
+        "extra": []
+      },
+      {
+        "name": "Gnome Boxes",
+        "icon": "gnome-boxes",
+        "description": "Simple remote and virtual machines",
+        "pkg": "gnome-boxes",
+        "extra": []
+      }
+    ]
+  },
+  {
     "name": "Browsers",
     "icon": "browser",
     "description": "Web browsing and communication",
@@ -86,167 +341,6 @@
         "icon": "thunderbird",
         "description": "Send and receive mail, contacts and schedule",
         "pkg": "thunderbird",
-        "extra": []
-      }
-    ]
-  },
-  {
-    "name": "Backup",
-    "icon": "deja-dup",
-    "description": "Backup utilites",
-    "apps": [
-      {
-        "name": "Deja Dup",
-        "icon": "deja-dup",
-        "description": "Keep your important documents safe from disater",
-        "pkg": "deja-dup",
-        "extra": []
-      },
-      {
-        "name": "Grsync",
-        "icon": "grsync",
-        "description": "Synchronize files and folders",
-        "pkg": "grsync",
-        "extra": []
-      },
-      {
-        "name": "Timeshift",
-        "icon": "timeshift",
-        "description": "A system restore utility for Linux",
-        "pkg": "timeshift",
-        "extra": []
-      }
-    ]
-  },
-  {
-    "name": "Text Editors",
-    "icon": "text-editor",
-    "description": "Various editors for text or code",
-    "apps": [
-      {
-        "name": "Atom",
-        "icon": "atom",
-        "description": "A hackable text editor for the 21st Century",
-        "pkg": "atom",
-        "extra": []
-      },
-      {
-        "name": "Geany",
-        "icon": "geany",
-        "description": "A fast and lightweight IDE using GTK+",
-        "pkg": "geany",
-        "extra": []
-      },
-      {
-        "name": "Mousepad",
-        "icon": "mousepad",
-        "description": "Simple Text Editor",
-        "pkg": "mousepad",
-        "extra": []
-      },
-      {
-        "name": "Xed",
-        "icon": "xed",
-        "description": "A small and lightweight text editor. X Apps Project",
-        "pkg": "xed",
-        "extra": []
-      }
-    ]
-  },
-  {
-    "name": "System Tools",
-    "icon": "disk-utility",
-    "description": "System utilities",
-    "apps": [
-      {
-        "name": "Gnome Disks",
-        "icon": "gnome-disks",
-        "description": "Disk management system for Gnome",
-        "pkg": "gnome-disk-utility",
-        "extra": []
-      },
-      {
-        "name": "Gparted",
-        "icon": "gparted",
-        "description": "Create, reorganize, and delete partitions",
-        "pkg": "gparted",
-        "extra": []
-      },
-      {
-        "name": "IsoUSB",
-        "icon": "usb-creator",
-        "description": "A graphical tool to copy a hybrid ISO onto a USB key.",
-        "pkg": "isousb",
-        "extra": []
-      },
-      {
-        "name": "Mintstick",
-        "icon": "mintstick",
-        "description": "Format or wirte imges to usb sticks (Linux Mint tool).",
-        "pkg": "mintstick",
-        "extra": []
-      },
-      {
-        "name": "Pamac",
-        "icon": "pamac-updater",
-        "description": "Update your System, Add/Remove Software from repo and AUR",
-        "pkg": "pamac",
-        "extra": []
-      },
-      {
-        "name": "Yay",
-        "icon": "terminal",
-        "description": "CLI AUR helper",
-        "pkg": "yay",
-        "extra": []
-      }
-    ]
-  },
-  {
-    "name": "Security",
-    "icon": "security-high",
-    "description": "Security oriented utilities",
-    "apps": [
-      {
-        "name": "KeePassX",
-        "icon": "keepassx",
-        "description": "Cross Platform Password Manager",
-        "pkg": "keepassx",
-        "extra": []
-      },
-      {
-        "name": "SeaHorse",
-        "icon": "seahorse",
-        "description": "Manage your passwords and encryption keys",
-        "pkg": "seahorse",
-        "extra": []
-      },
-      {
-        "name": "VeraCrypt",
-        "icon": "veracrypt",
-        "description": "Disk encryption with strong security based on TrueCrypt",
-        "pkg": "veracrypt",
-        "extra": []
-      }
-    ]
-  },
-  {
-    "name": "Virtual Computing",
-    "icon": "virt-manager",
-    "description": "Virtual Machine applications",
-    "apps": [
-      {
-        "name": "VirtualBox",
-        "icon": "virtualbox",
-        "description": "Run several virtual systems on a single host computer",
-        "pkg": "calibre",
-        "extra": []
-      },
-      {
-        "name": "Gnome Boxes",
-        "icon": "gnome-boxes",
-        "description": "Simple remote and virtual machines",
-        "pkg": "gnome-boxes",
         "extra": []
       }
     ]
