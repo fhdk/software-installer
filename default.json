@@ -124,13 +124,6 @@
     "description": "Security oriented utilities",
     "apps": [
       {
-        "name": "Firewall",
-        "icon": "network-firewall",
-        "description": "Graphical Firewall Manager",
-        "pkg": "gufw",
-        "extra": []
-      },
-      {
         "name": "KeePassX",
         "icon": "keepassx",
         "description": "Cross Platform Password Manager",
@@ -234,7 +227,7 @@
         "description": "View and organize your images",
         "pkg": "viewnior",
         "extra": []
-      },
+      } ,
       {
         "name": "Gwenview",
         "icon": "gwenview",
@@ -310,6 +303,20 @@
         "icon": "ms-word",
         "description": "Microsoft Office Online",
         "pkg": "ms-office-online",
+        "extra": []
+      }
+    ]
+  },
+  {
+    "name": "Printing",
+    "icon": "printer",
+    "description": "Support for printing CUPS, HPLIP",
+    "apps": [
+      {
+        "name": "Manjaro Printing",
+        "icon": "printer",
+        "description": "Printing Meta Package",
+        "pkg": "manjaro-printer",
         "extra": []
       }
     ]
