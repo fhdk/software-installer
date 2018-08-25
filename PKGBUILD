@@ -2,11 +2,11 @@
 
 pkgname=manjaro-application-utility
 pkgver=1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Manjaro Application Utility"
 arch=('any')
 license=('MIT')
-depends=("python" "gtk3" "python-gobject" "zenity" "manjaro-icons" "pamac")
+depends=("python" "gtk3" "python-gobject" "zenity" "manjaro-icons" "pamac>=6.9.0")
 source=("app-utility" "app-utility.desktop" "default.json" "advanced.json" "LICENSE")
 provides=('manjaro-application-utility')
 conflicts=('manjaro-software-install-tool')
