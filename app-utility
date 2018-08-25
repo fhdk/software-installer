@@ -224,16 +224,24 @@ class MainWindow(Gtk.Window):
                         data = json.loads(response.read().decode("utf8"))
                         self.write_json_file(data, file)
 
+                dialog = Gtk.MessageDialog(self, parent=None,
+                                           message_type=Gtk.MessageType.INFO,
+                                           buttons=Gtk.ButtonsType.OK,
+                                           text="Download done. List will be reloaded.")
+                dialog.run()
+                dialog.destroy()
+                self.reload_app_data(self.pref["data_set"])
             except Exception as e:
                 print(e)
 
         else:
-            dialog = Gtk.MessageDialog(self, 0,
-                                       Gtk.MessageType.ERROR,
-                                       Gtk.ButtonsType.CANCEL,
-                                       "Download not available")
-            dialog.format_secondary.text("The server 'gitlab.manjaro.org' could not be reached")
+            dialog = Gtk.MessageDialog(self, parent=None,
+                                       message_type=Gtk.MessageType.ERROR,
+                                       buttons=Gtk.ButtonsType.CANCEL,
+                                       text="Download not available")
+            dialog.format_secondary.text(text="The server 'gitlab.manjaro.org' could not be reached.")
             dialog.run()
+            dialog.destroy()
 
     def on_app_toggle(self, cell, path):
         # a group has no package attached and we don't install groups
@@ -285,11 +293,6 @@ class MainWindow(Gtk.Window):
                 print("pkg list removal: {}".format(self.pkg_list_removal))
 
     def on_update_system_clicked(self, widget):
-        file_install = "/tmp/.install-packages.txt"
-        file_uninstall = "/tmp/.remove-packages.txt"
-
-        os.environ["APP_UTILITY"] = "PACKAGES"
-        shell_fallback = False
 
         if self.pkg_list_install:
             subprocess.run(["pamac-install"] + self.pkg_list_install)
