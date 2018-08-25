@@ -35,7 +35,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-VERSION = "0.9"
+VERSION = "1.0"
 TITLE = "Manjaro Application Utility {}".format(VERSION)
 
 GROUP = 0
