@@ -11,7 +11,7 @@ source=("app-utility" "app-utility.desktop" "default.json" "advanced.json" "LICE
 provides=('manjaro-application-utility')
 conflicts=('manjaro-software-install-tool')
 replaces=('manjaro-software-install-tool')
-sha256sums=('f0967561bad5c362456ed62b8f56ed57449c71452c01f95e81c1a397fc7ea9bf'
+sha256sums=('edb25362bed106949397a4e5e8b31550838c75e89408d87acffc139e2865e83c'
             '3f2ada3842e8e0c97c2d67b729dddf734a9359c626151c5337451122316df7b9'
             'ffa2d0e41dc31f198d8b107d82add1b951dd2e7881b0b0d33b2a56cb19152d7a'
             'fd45c3975900bec901dd089189a2e1666adc6d2def536e3b5df878bc032f58b3'
