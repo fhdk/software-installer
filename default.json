@@ -2,7 +2,7 @@
   {
     "name": "Browsers",
     "icon": "browser",
-    "description": "Web browsning and communication",
+    "description": "Web browsing and communication",
     "apps": [
       {
         "name": "Chromium",
@@ -21,7 +21,7 @@
       {
         "name": "Opera",
         "icon": "opera",
-        "description": "Fast and secure webbrowser",
+        "description": "Fast and secure web browser",
         "pkg": "opera",
         "extra": []
       }

@@ -187,9 +187,16 @@
         "extra": []
       },
       {
+        "name": "Octopi",
+        "icon": "octopi",
+        "description": "Update your System, Add/Remove Software",
+        "pkg": "octopi",
+        "extra": []
+      },
+      {
         "name": "Pamac",
         "icon": "pamac-updater",
-        "description": "Update your System, Add/Remove Software from repo and AUR",
+        "description": "Update your System, Add/Remove Software",
         "pkg": "pamac",
         "extra": []
       },
