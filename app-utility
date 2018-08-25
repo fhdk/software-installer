@@ -53,15 +53,15 @@ class MainWindow(Gtk.Window):
         self.app = "app-utility"
         self.pref = {
             "data_set": "default",
-            "conf_dir": "~/.config",
-            "share_dir": "/usr/share/{}".format(self.app),
+            "user_path": "~/.config",
+            "data_path": "/usr/share/{}".format(self.app),
             "data_sets": ["default", "advanced"],
             "url": "https://gitlab.manjaro.org/fhdk/application-utility/raw/master"
         }
 
         self.dev = "--dev" in sys.argv
         if self.dev:
-            self.pref["share_dir"] = "."
+            self.pref["data_path"] = "."
 
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         GLib.set_prgname("{}".format(self.app))
@@ -169,10 +169,10 @@ class MainWindow(Gtk.Window):
         self.show_all()
 
     def load_app_data(self, data_set):
-        if os.path.isfile("{}/{}.json".format(self.pref["conf_dir"], data_set)):
-            self.app_data = self.read_json_file("{}/{}.json".format(self.pref["conf_dir"], data_set))
+        if os.path.isfile("{}/{}.json".format(self.pref["user_path"], data_set)):
+            self.app_data = self.read_json_file("{}/{}.json".format(self.pref["user_path"], data_set))
         else:
-            self.app_data = self.read_json_file("{}/{}.json".format(self.pref["share_dir"], data_set))
+            self.app_data = self.read_json_file("{}/{}.json".format(self.pref["data_path"], data_set))
 
         store = Gtk.TreeStore(str, str, str, str, bool, str, bool)
         for group in self.app_data:
@@ -218,7 +218,7 @@ class MainWindow(Gtk.Window):
             try:
                 for download in self.pref["data_sets"]:
                     url = "{}/{}.json".format(self.pref["url"], download)
-                    file = self.fix_path("{}/{}.json".format(self.pref["conf_dir"], download))
+                    file = self.fix_path("{}/{}.json".format(self.pref["user_path"], download))
                     req = urllib.request.Request(url=url)
                     with urllib.request.urlopen(req, timeout=2) as response:
                         data = json.loads(response.read().decode("utf8"))
@@ -292,27 +292,12 @@ class MainWindow(Gtk.Window):
         shell_fallback = False
 
         if self.pkg_list_install:
-            if os.path.isfile("/usr/bin/pamac-installer"):
-                subprocess.run(["pamac-installer"] + self.pkg_list_install)
-            else:
-                shell_fallback = True
-                with open(file_install, "w") as outfile:
-                    for p in self.pkg_list_install:
-                        outfile.write("{} ".format(p))
+            subprocess.run(["pamac-install"] + self.pkg_list_install)
 
         if self.pkg_list_removal:
-            shell_fallback = True
-            with open(file_uninstall, "w") as outfile:
-                for p in self.pkg_list_removal:
-                    outfile.write("{} ".format(p))
+            subprocess.run(["pamac-remove"] + self.pkg_list_removal)
 
-        if shell_fallback:
-            if self.dev:
-                os.system('gksu-polkit ./app-install')
-            else:
-                os.system('gksu-polkit app-install')
-
-        Gtk.main_quit()
+        self.reload_app_data(self.pref["data_set"])
 
     @staticmethod
     def app_installed(package):
