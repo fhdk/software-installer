@@ -2,7 +2,7 @@
 
 pkgname=manjaro-application-utility
 pkgver=1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Manjaro Application Utility"
 arch=('any')
 license=('MIT')
@@ -11,7 +11,7 @@ source=("app-utility" "app-utility.desktop" "default.json" "advanced.json" "LICE
 provides=('manjaro-application-utility')
 conflicts=('manjaro-software-install-tool')
 replaces=('manjaro-software-install-tool')
-sha256sums=('c2fe4b8350d3a12b0fe682f29be756314acb701fd6dbec1c612865960c3a0718'
+sha256sums=('c6c7961371f6ada44bbb449bd97e91e033d56cf18d72d60be8fae978ceceb537'
             '3f2ada3842e8e0c97c2d67b729dddf734a9359c626151c5337451122316df7b9'
             'ffa2d0e41dc31f198d8b107d82add1b951dd2e7881b0b0d33b2a56cb19152d7a'
             'fd45c3975900bec901dd089189a2e1666adc6d2def536e3b5df878bc032f58b3'

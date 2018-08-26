@@ -142,21 +142,26 @@ class MainWindow(Gtk.Window):
 
         # button box
         self.button_box = Gtk.Box(spacing=10)
-        self.advanced = Gtk.ToggleButton(label="Advanced")
-        self.advanced.connect("clicked", self.on_expert_clicked)
-        self.download = Gtk.Button(label="download")
-        self.download.connect("clicked", self.on_download_clicked)
-        self.reload_button = Gtk.Button(label="reload")
-        self.reload_button.connect("clicked", self.on_reload_clicked)
+        self.advanced_button = Gtk.ToggleButton(label="advanced")
+        self.advanced_button.set_tooltip_text("Toggle an extended selection of packages...")
+        self.advanced_button.connect("clicked", self.on_advanced_clicked)
+        self.download_button = Gtk.Button(label="download")
+        self.download_button.set_tooltip_text("Download the most recent selection of packages...")
+        self.download_button.connect("clicked", self.on_download_clicked)
+        self.reset_button = Gtk.Button(label="reset")
+        self.reset_button.set_tooltip_text("Reset your current selections...")
+        self.reset_button.connect("clicked", self.on_reload_clicked)
         self.update_system_button = Gtk.Button(label="UPDATE SYSTEM")
+        self.update_system_button.set_tooltip_text("Apply your current selections to the system...")
         self.update_system_button.connect("clicked", self.on_update_system_clicked)
         self.close_button = Gtk.Button(label="close")
+        self.close_button.set_tooltip_text("Discard selections and close app...")
         self.close_button.connect("clicked", Gtk.main_quit)
-        self.button_box.pack_start(self.advanced, expand=False, fill=False, padding=10)
+        self.button_box.pack_start(self.advanced_button, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.update_system_button, expand=False, fill=False, padding=10)
         self.button_box.pack_end(self.close_button, expand=False, fill=False, padding=10)
-        self.button_box.pack_end(self.reload_button, expand=False, fill=False, padding=10)
-        self.button_box.pack_end(self.download, expand=False, fill=False, padding=10)
+        self.button_box.pack_end(self.reset_button, expand=False, fill=False, padding=10)
+        self.button_box.pack_end(self.download_button, expand=False, fill=False, padding=10)
 
         # create a scrollable window
         self.app_window = Gtk.ScrolledWindow()
@@ -205,7 +210,14 @@ class MainWindow(Gtk.Window):
     def on_reload_clicked(self, widget):
         self.reload_app_data(self.pref["data_set"])
 
-    def on_expert_clicked(self, widget):
+        dialog = Gtk.MessageDialog(self, parent=None,
+                                   message_type=Gtk.MessageType.INFO,
+                                   buttons=Gtk.ButtonsType.OK,
+                                   text="Your selections has been reset.")
+        dialog.run()
+        dialog.destroy()
+
+    def on_advanced_clicked(self, widget):
         if widget.get_active():
             self.pref["data_set"] = "advanced"
         else:
@@ -227,7 +239,7 @@ class MainWindow(Gtk.Window):
                 dialog = Gtk.MessageDialog(self, parent=None,
                                            message_type=Gtk.MessageType.INFO,
                                            buttons=Gtk.ButtonsType.OK,
-                                           text="Download done. List will be reloaded.")
+                                           text="Download done. List will be reloaded and selections reset.")
                 dialog.run()
                 dialog.destroy()
                 self.reload_app_data(self.pref["data_set"])
@@ -300,7 +312,21 @@ class MainWindow(Gtk.Window):
         if self.pkg_list_removal:
             subprocess.run(["pamac-remove"] + self.pkg_list_removal)
 
-        self.reload_app_data(self.pref["data_set"])
+        if not self.pkg_list_removal and not self.pkg_list_install:
+            dialog = Gtk.MessageDialog(self, parent=None,
+                                       message_type=Gtk.MessageType.INFO,
+                                       buttons=Gtk.ButtonsType.OK,
+                                       text="Really? There is nothing to do...")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(self, parent=None,
+                                       message_type=Gtk.MessageType.INFO,
+                                       buttons=Gtk.ButtonsType.OK,
+                                       text="Your system has been updated.")
+            dialog.run()
+            dialog.destroy()
+            self.reload_app_data(self.pref["data_set"])
 
     @staticmethod
     def app_installed(package):
